@@ -1,0 +1,30 @@
+<!-- Config file for the game -->
+
+<config>
+  <app framerate_cap ="30">
+    <title>Game Development Testbed</title>
+    <organization>UPC</organization>
+  </app>
+
+  <audio>
+    <music volume="0.5">
+      <folder>Assets/audio/music/</folder>
+    </music>
+    <fx volume="1">
+      <folder>Assets/audio/fx/</folder>
+    </fx>
+  </audio>
+	
+  <renderer>
+    <vsync value="false"/>
+  </renderer>
+
+  <window>
+    <resolution width="800" height="600" scale="1"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+</config>
