@@ -115,6 +115,45 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="j1Animation.h" />
+    <ClInclude Include="j1App.h" />
+    <ClInclude Include="j1Audio.h" />
+    <ClInclude Include="j1Collisions.h" />
+    <ClInclude Include="j1Entity.h" />
+    <ClInclude Include="j1EntityManager.h" />
+    <ClInclude Include="j1FadeToBlack.h" />
+    <ClInclude Include="j1Input.h" />
+    <ClInclude Include="j1Module.h" />
+    <ClInclude Include="j1PerfTimer.h" />
+    <ClInclude Include="j1Player.h" />
+    <ClInclude Include="j1Render.h" />
+    <ClInclude Include="j1Scene.h" />
+    <ClInclude Include="j1Textures.h" />
+    <ClInclude Include="j1Timer.h" />
+    <ClInclude Include="j1Window.h" />
+    <ClInclude Include="p2Defs.h" />
+    <ClInclude Include="p2DynArray.h" />
+    <ClInclude Include="p2List.h" />
+    <ClInclude Include="p2Log.h" />
+    <ClInclude Include="p2Point.h" />
+    <ClInclude Include="p2SString.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="j1App.cpp" />
+    <ClCompile Include="j1Audio.cpp" />
+    <ClCompile Include="j1Collisions.cpp" />
+    <ClCompile Include="j1EntityManager.cpp" />
+    <ClCompile Include="j1FadeToBlack.cpp" />
+    <ClCompile Include="j1Input.cpp" />
+    <ClCompile Include="j1Main.cpp" />
+    <ClCompile Include="j1PerfTimer.cpp" />
+    <ClCompile Include="j1Player.cpp" />
+    <ClCompile Include="j1Render.cpp" />
+    <ClCompile Include="j1Scene.cpp" />
+    <ClCompile Include="j1Textures.cpp" />
+    <ClCompile Include="j1Timer.cpp" />
+    <ClCompile Include="j1Window.cpp" />
+    <ClCompile Include="p2Log.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
