@@ -15,13 +15,7 @@ class j1Render;
 class j1Textures;
 class j1Audio;
 class j1Scene;
-class j1Scene2;
-class j1Map;
-class j1EntityManager;
-class j1Player;
 class j1FadeToBlack;
-class j1Collisions;
-class j1PathFinding;
 
 class j1App
 {
@@ -58,6 +52,8 @@ public:
 	void SaveGame() const;
 	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
 
+	pugi::xml_node GetSaveData();
+
 	// Load config file
 	pugi::xml_node LoadConfig(pugi::xml_document&) const;
 
@@ -84,30 +80,27 @@ private:
 	bool SavegameNow() const;
 
 public:
-
+	pugi::xml_document save_gamedata;
 	// Modules
 	j1Window*			win;
 	j1Input*			input;
 	j1Render*			render;
 	j1Textures*			tex;
 	j1Audio*			audio;
-	j1PathFinding*		path;
 	j1Scene*			scene;
-	j1Scene2*			scene2;
-	j1Map*				map;
-	j1Collisions*		collisions;
 	j1FadeToBlack*		fade;
-	j1EntityManager*	entitymanager;
 	float previous_time;
 	float current_time;
 	uint				frame_cap;
 	float accumulated = 0;
+	float				dt;
+
+	j1PerfTimer	p_timer;
 
 private:
 
 	p2List<j1Module*>	modules;
 	uint				frames;
-	float				dt;
 	uint				started_at;
 	int					argc;
 	char**				args;
@@ -133,6 +126,8 @@ private:
 	uint32				frames_on_last_update;
 	bool				cap_frames = true;
 	int					capped_ms;
+	uint64				b_timer = 0;
+	uint				b_score = 0;
 
 };
 

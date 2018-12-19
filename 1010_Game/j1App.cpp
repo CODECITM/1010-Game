@@ -9,15 +9,10 @@
 #include "j1Textures.h"
 #include "j1Audio.h"
 #include "j1Scene.h"
-#include "j1Map.h"
 #include "j1App.h"
 #include "j1FadeToBlack.h"
-#include "j1Collisions.h"
-#include "j1Scene2.h"
-#include "j1EntityManager.h"
-#include "j1Pathfinding.h"
 #include "Brofiler\Brofiler.h"
-#include "j1Player.h"
+
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
@@ -29,12 +24,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	win = new j1Window();
 	tex = new j1Textures();
 	audio = new j1Audio();
-	path = new j1PathFinding();
-	map = new j1Map();
 	scene = new j1Scene();
-	scene2 = new j1Scene2();
-	collisions = new j1Collisions();
-	entitymanager = new j1EntityManager();
 	render = new j1Render();
 	fade = new j1FadeToBlack();
 
@@ -45,12 +35,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(win);
 	AddModule(tex);
 	AddModule(audio);
-	AddModule(map);
-	AddModule(path);
 	AddModule(scene);
-	AddModule(scene2);
-	AddModule(collisions);
-	AddModule(entitymanager);
 	AddModule(fade);
 
 
@@ -131,7 +116,6 @@ bool j1App::Awake()
 bool j1App::Start()
 {
 	//DISABLE MODULES YOU DON'T WANT
-	scene2->Disable();
 
 	PERF_START(ptimer);
 
@@ -207,52 +191,14 @@ void j1App::FinishUpdate()
 
 	if(want_to_load == true)
 		LoadGameNow();
-
-	// Framerate calculations --
-
-	if (last_sec_frame_time.Read() > 1000)
-	{
-		last_sec_frame_time.Start();
-		prev_last_sec_frame_count = last_sec_frame_count;
-		last_sec_frame_count = 0;
-	}
-
-	avg_fps = float(frame_count) / startup_time.ReadSec();
-	seconds_since_startup = startup_time.ReadSec();
-	uint32 current_ms_frame = ptimer.ReadMs();
-	last_frame_ms = current_ms_frame;
-
-	if (App->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)
-		cap_frames = !cap_frames;
-
-	if (cap_frames) {
-
-		if (capped_ms > 0 && last_frame_ms < capped_ms) {
-			j1PerfTimer t;
- 			SDL_Delay(capped_ms - last_frame_ms);
-			LOG("We waited for %d milliseconds and got back in %f", capped_ms - last_frame_ms, t.ReadMs());
-		}
-	}
-
-	float framerate = 1000.0f / ptimer.ReadMs();
-	dt = 1.0f / framerate;
-	if (App->entitymanager->GetPlayer() != nullptr) {
-		p2SString title("FPS: %i Av.FPS: %.2f Last Frame Ms: %02u Cap: %i VSync %i - Tails Odyssey Map:%dx%d - GODMODE:%i",
-			prev_last_sec_frame_count, avg_fps, last_frame_ms, cap_frames, App->render->vsync, App->map->data.width, App->map->data.height, App->entitymanager->GetPlayer()->godmode);
-		App->win->SetTitle(title.GetString());
-	}
-	else {
-		p2SString title("FPS: %i Av.FPS: %.2f L.Frame Ms: %02u Cap: %i VSync %i - Tails Odyssey Map:%dx%d - GODMODE:%i",
-			prev_last_sec_frame_count, avg_fps, last_frame_ms, cap_frames, App->render->vsync, App->map->data.width, App->map->data.height, 0);
-		App->win->SetTitle(title.GetString());
-	}
-		
+	
 }
 
 // Call modules before each loop iteration
 bool j1App::PreUpdate()
 {
-	BROFILER_CATEGORY("Preupdate", Profiler::Color::Orchid)
+	BROFILER_CATEGORY("Preupdate", Profiler::Color::Orchid);
+
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.start;
@@ -266,7 +212,7 @@ bool j1App::PreUpdate()
 			continue;
 		}
 
-		ret = item->data->PreUpdate();
+			ret = item->data->PreUpdate();
 	}
 
 	return ret;
@@ -287,7 +233,6 @@ bool j1App::DoUpdate()
 		if(pModule->active == false) {
 			continue;
 		}
-
 		ret = item->data->Update(dt);
 	}
 
@@ -382,21 +327,33 @@ void j1App::GetSaveGames(p2List<p2SString>& list_to_fill) const
 	// need to add functionality to file_system module for this to work
 }
 
+pugi::xml_node j1App::GetSaveData() {
+	pugi::xml_node root;
+
+	pugi::xml_parse_result result = save_gamedata.load_file(load_game.GetString());
+
+	if (result != NULL)
+	{
+		LOG("Loading new Game State from %s...", load_game.GetString());
+
+		root = save_gamedata.child("game_state");
+		return root;
+	}
+	else
+		LOG("Could not parse game state xml file %s. pugi error: %s", load_game.GetString(), result.description());
+	return root;
+}
+
 bool j1App::LoadGameNow()
 {
 	BROFILER_CATEGORY("LoadGame", Profiler::Color::Orange)
 	bool ret = false;
 
-	pugi::xml_document data;
-	pugi::xml_node root;
+	pugi::xml_node root = GetSaveData();
 
-	pugi::xml_parse_result result = data.load_file(load_game.GetString());
-
-	if(result != NULL)
+	if(root != NULL)
 	{
 		LOG("Loading new Game State from %s...", load_game.GetString());
-
-		root = data.child("game_state");
 
 		p2List_item<j1Module*>* item = modules.start;
 		ret = true;
@@ -408,14 +365,12 @@ bool j1App::LoadGameNow()
 			item = item->next;
 		}
 
-		data.reset();
+		save_gamedata.reset();
 		if(ret == true)
 			LOG("...finished loading");
 		else
 			LOG("...loading process interrupted with error on module %s", (item != NULL) ? item->data->name.GetString() : "unknown");
 	}
-	else
-		LOG("Could not parse game state xml file %s. pugi error: %s", load_game.GetString(), result.description());
 
 	want_to_load = false;
 	return ret;

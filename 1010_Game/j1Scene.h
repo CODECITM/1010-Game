@@ -5,6 +5,28 @@
 
 struct SDL_Texture;
 
+enum Color {
+	GREY = -1,
+	RED,
+	GREEN,
+	YELLOW,
+	BLUE
+};
+
+struct Cell {
+	iPoint position;
+	bool active;
+	Color color;
+	SDL_Rect* rect;
+
+	Cell(iPoint position, SDL_Rect* rect, bool active, Color color) :
+		position(position),
+		active(active),
+		color(color),
+		rect(rect)
+	{}
+};
+
 class j1Scene : public j1Module
 {
 public:
@@ -37,13 +59,9 @@ public:
 	bool Save(pugi::xml_node & data) const;
 
 private:
-	p2SString map;
-	p2SString music_path;
-	p2SString fx_path;
-	iPoint cam_pos;
-	Levels load_scene;
+	Cell* grid[10][10];
+	int cell_size;
 
-	SDL_Texture* debug_tex;
 };
 
 #endif // __j1SCENE_H__
