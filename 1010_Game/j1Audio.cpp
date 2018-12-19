@@ -1,3 +1,4 @@
+#include "Brofiler/Brofiler.h"
 #include "p2Defs.h"
 #include "p2Log.h"
 #include "j1Audio.h"
@@ -20,12 +21,6 @@ j1Audio::~j1Audio()
 // Called before render is available
 bool j1Audio::Awake(pugi::xml_node& config)
 {
-	music_path.create(config.child("music").child("folder").child_value());
-	fx_path.create(config.child("fx").child("folder").child_value());
-
-	v_music =config.child("music").attribute("volume").as_float();
-	v_fx = config.child("fx").attribute("volume").as_float();
-
 	LOG("Loading Audio Mixer");
 	bool ret = true;
 	SDL_Init(0);
@@ -56,6 +51,19 @@ bool j1Audio::Awake(pugi::xml_node& config)
 		ret = true;
 	}
 
+	//Load default volumes
+	masterVolume = config.attribute("volume").as_uint();
+	musicVolume = config.child("music").attribute("volume").as_uint();
+	sfxVolume = config.child("sfx").attribute("volume").as_uint();
+
+	// Load all audio files' data (names mainly)
+	LoadAllMusic(config);
+	LoadAllSfx(config);
+
+	// Pass values to mixer
+	MusicToMixer();
+	SfxToMixer();
+
 	return ret;
 }
 
@@ -85,6 +93,89 @@ bool j1Audio::CleanUp()
 	return true;
 }
 
+// Load
+bool j1Audio::Load(pugi::xml_node &data)
+{
+	pugi::xml_node tmpNode;
+
+	masterVolume = data.attribute("volume").as_uint();
+	musicVolume = data.child("music").attribute("volume").as_uint();
+	sfxVolume = data.child("sfx").attribute("volume").as_uint();
+
+	return true;
+}
+
+// Save
+bool j1Audio::Save(pugi::xml_node &data) const
+{
+	pugi::xml_node tmpNode;
+
+	data.append_attribute("volume") = masterVolume;
+
+	tmpNode = data.append_child("music");
+	tmpNode.append_attribute("volume") = musicVolume;
+	
+	tmpNode = data.append_child("sfx");
+	tmpNode.append_attribute("volume") = sfxVolume;
+
+	return true;
+}
+
+// ------------------------------------------------------------------------
+
+// Load WAV
+unsigned int j1Audio::LoadFx(const char* path)
+{
+	unsigned int ret = 0;
+
+	if (!active)
+		return 0;
+
+	Mix_Chunk* chunk = Mix_LoadWAV(path);
+
+	if (chunk == NULL)
+	{
+		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
+	}
+	else
+	{
+		fx.add(chunk);
+		ret = fx.count();
+	}
+
+	return ret;
+}
+
+// Unload WAV
+void j1Audio::UnloadFx()
+{
+	p2List_item<Mix_Chunk*>* item;
+	for (item = fx.start; item != NULL; item = item->next)
+		Mix_FreeChunk(item->data);
+	fx.clear();
+}
+
+void j1Audio::LoadAllMusic(pugi::xml_node& config) {	// @Carles
+	musicFolder.create(config.child("music").child("folder").child_value());
+
+	//musicMainMenu.create("%s", config.child("music").child("mainMenu").child_value());
+}
+
+void j1Audio::LoadAllSfx(pugi::xml_node& config) {	// @Carles
+	sfxFolder.create(config.child("sfx").child("folder").child_value());
+
+	buttonHoverSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("buttonHover").child_value());
+	buttonPressSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("buttonPress").child_value());
+
+	LoadFx(buttonHoverSfx.filename.GetString());
+	buttonHoverSfx.id = SFX_BUTTON_HOVER;
+
+	LoadFx(buttonPressSfx.filename.GetString());
+	buttonPressSfx.id = SFX_BUTTON_PRESS;
+}
+
+// ------------------------------------------------------------------------
+
 // Play a music file
 bool j1Audio::PlayMusic(const char* path, float fade_time)
 {
@@ -108,11 +199,9 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 		Mix_FreeMusic(music);
 	}
 
-	p2SString tmp("%s%s", music_path.GetString(), path);
+	p2SString tmp("%s%s", musicFolder.GetString(), path);
 
-	music = Mix_LoadMUS(tmp.GetString());
-
-	ChangeMusicVolume();
+	music = Mix_LoadMUS(path);
 
 	if(music == NULL)
 	{
@@ -139,35 +228,7 @@ bool j1Audio::PlayMusic(const char* path, float fade_time)
 		}
 	}
 
-	//Mix_VolumeMusic(1.0f);
 	LOG("Successfully playing %s", path);
-	return ret;
-}
-
-// Load WAV
-unsigned int j1Audio::LoadFx(const char* path)
-{
-	unsigned int ret = 0;
-
-	if(!active)
-		return 0;
-
-	p2SString tmp("%s%s", fx_path.GetString(), path);
-
-	Mix_Chunk* chunk = Mix_LoadWAV(tmp.GetString());
-
-	ChangeFxVolume(chunk);
-
-	if(chunk == NULL)
-	{
-		LOG("Cannot load wav %s. Mix_GetError(): %s", path, Mix_GetError());
-	}
-	else
-	{
-		fx.add(chunk);
-		ret = fx.count();
-	}
-
 	return ret;
 }
 
@@ -176,10 +237,10 @@ bool j1Audio::PlayFx(unsigned int id, int repeat)
 {
 	bool ret = false;
 
-	if(!active)
+	if (!active)
 		return false;
 
-	if(id > 0 && id <= fx.count())
+	if (id > 0 && id <= fx.count())
 	{
 		Mix_PlayChannel(-1, fx[id - 1], repeat);
 	}
@@ -187,25 +248,41 @@ bool j1Audio::PlayFx(unsigned int id, int repeat)
 	return ret;
 }
 
-void j1Audio::StopMusic() {
+// Stop music
+void j1Audio::StopMusic()
+{
 	Mix_HaltMusic();
 }
 
-void j1Audio::StopFx() {
+// Stop all sfx
+void j1Audio::StopFx()
+{
 	Mix_HaltChannel(-1);
 }
 
-void j1Audio::ChangeMusicVolume() {
-	Mix_VolumeMusic(MIX_MAX_VOLUME - (MIX_MAX_VOLUME - (int)(v_music * MIX_MAX_VOLUME)));
+// ------------------------------------------------------------------------
+
+int j1Audio::SetMasterVolume(ushort newVolume) {
+	masterVolume = newVolume;
+	Mix_VolumeMusic(masterVolume * (musicVolume * MIX_MAX_VOLUME / 100) / 100);
+	Mix_Volume(-1, masterVolume * (sfxVolume * MIX_MAX_VOLUME / 100) / 100);
+	return (int)masterVolume;
 }
 
-void j1Audio::ChangeFxVolume(Mix_Chunk* fx) {
-	Mix_VolumeChunk(fx,MIX_MAX_VOLUME - (MIX_MAX_VOLUME - (int)(v_fx * MIX_MAX_VOLUME)));
+int j1Audio::SetMusicVolume(ushort newVolume) {
+	musicVolume = newVolume;
+	return Mix_VolumeMusic(masterVolume * (musicVolume * MIX_MAX_VOLUME / 100) / 100);
 }
 
-void j1Audio::UnloadFx() {
-	p2List_item<Mix_Chunk*>* item;
-	for (item = fx.start; item != NULL; item = item->next)
-		Mix_FreeChunk(item->data);
-	fx.clear();
+int j1Audio::SetSfxVolume(ushort newVolume) {
+	sfxVolume = newVolume;
+	return Mix_Volume(-1, masterVolume * (sfxVolume * MIX_MAX_VOLUME / 100) / 100);
+}
+
+int j1Audio::MusicToMixer() const {
+	return Mix_VolumeMusic(masterVolume * (musicVolume * MIX_MAX_VOLUME / 100) / 100);
+}
+
+int j1Audio::SfxToMixer() const {
+	return Mix_Volume(-1, masterVolume * (sfxVolume * MIX_MAX_VOLUME / 100) / 100);
 }

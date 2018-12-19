@@ -36,10 +36,16 @@
 #define MAX( a, b ) ( ((a) > (b)) ? (a) : (b) )
 #define TO_BOOL( a )  ( (a != 0) ? true : false )
 
-typedef unsigned int uint;
-typedef unsigned __int32 uint32;
-typedef unsigned __int64 uint64;
-typedef unsigned char uchar;
+typedef unsigned char uchar;		// 256
+typedef unsigned short ushort;		// 65 536
+typedef unsigned int uint;			// 4 294 967 296
+typedef unsigned long ulong;
+typedef unsigned long long ulonglong;
+
+typedef unsigned __int8 uint8;		// char
+typedef unsigned __int16 uint16;	// short
+typedef unsigned __int32 uint32;	// int/long
+typedef unsigned __int64 uint64;	// long long
 
 template <class VALUE_TYPE> void SWAP(VALUE_TYPE& a, VALUE_TYPE& b)
 {

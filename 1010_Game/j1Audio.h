@@ -5,10 +5,22 @@
 #include "SDL_mixer\include\SDL_mixer.h"
 #include "p2List.h"
 
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define DEFAULT_MUSIC_FADE_TIME 2.0f	//IMPROVE: Put on xml
 
 struct _Mix_Music;
 struct Mix_Chunk;
+
+enum sfx_id_list {	// @Carles: List of SFX id numbers
+	SFX_BUTTON_HOVER = 1,
+	SFX_BUTTON_PRESS,
+
+	SFX_MAX
+};
+
+struct sfx_file {	// @Carles: The filename of the sfx + his enum id
+	p2SString filename;
+	uint id;
+};
 
 class j1Audio : public j1Module
 {
@@ -25,32 +37,50 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// Play a music file
-	bool PlayMusic(const char* path, float fade_time = DEFAULT_MUSIC_FADE_TIME);
+	// Save and Load
+	bool Load(pugi::xml_node&);
+	bool Save(pugi::xml_node&) const;
 
-	// Load a WAV in memory
-	unsigned int LoadFx(const char* path);
-
-	// Play a previously loaded WAV
+	// Play
+	bool PlayMusic(const char* path, float fade_time = 0.0f);
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	// Stop
 	void StopMusic();
-
 	void StopFx();
 
-	void ChangeMusicVolume();
-	void ChangeFxVolume(Mix_Chunk* fx);
-
+	// Load in memory
+	unsigned int LoadFx(const char* path);
 	void UnloadFx();
+
+public:	// @Carles
+	int SetMasterVolume(ushort newVolume);
+	int SetMusicVolume(ushort newVolume);
+	int SetSfxVolume(ushort newVolume);
+
+	int MusicToMixer() const;
+	int SfxToMixer() const;
+
+public:	// @Carles
+	//p2SString musicMainMenu;
+
+	sfx_file buttonHoverSfx;
+	sfx_file buttonPressSfx;
+
+	ushort masterVolume;
+	ushort musicVolume;
+	ushort sfxVolume;
 
 private:
 
+	void LoadAllMusic(pugi::xml_node&);		// @Carles
+	void LoadAllSfx(pugi::xml_node&);		// @Carles
+
 	_Mix_Music*			music;
 	p2List<Mix_Chunk*>	fx;
-	p2SString			music_path;
-	p2SString			fx_path;
-	float v_music;
-	float v_fx;
+
+	p2SString musicFolder;	// @Carles
+	p2SString sfxFolder;	// @Carles
 };
 
 #endif // __j1AUDIO_H__

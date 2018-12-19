@@ -28,9 +28,6 @@
     <ClInclude Include="j1App.h">
       <Filter>Source</Filter>
     </ClInclude>
-    <ClInclude Include="j1Audio.h">
-      <Filter>Source\Modules</Filter>
-    </ClInclude>
     <ClInclude Include="j1Collisions.h">
       <Filter>Source\Modules</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
     <ClInclude Include="j1Module.h">
       <Filter>Source</Filter>
     </ClInclude>
+    <ClInclude Include="j1Audio.h">
+      <Filter>Source\Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="j1App.cpp">
@@ -97,9 +97,6 @@
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="j1Input.cpp">
-      <Filter>Source\Modules</Filter>
-    </ClCompile>
-    <ClCompile Include="j1Audio.cpp">
       <Filter>Source\Modules</Filter>
     </ClCompile>
     <ClCompile Include="j1EntityManager.cpp">
@@ -134,6 +131,9 @@
     </ClCompile>
     <ClCompile Include="p2Log.cpp">
       <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="j1Audio.cpp">
+      <Filter>Source\Modules</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
