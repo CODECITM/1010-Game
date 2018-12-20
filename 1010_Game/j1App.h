@@ -18,7 +18,7 @@ class j1Scene;
 //class j1Map;
 //class j1PathFinding;
 //class j1EntityManager;
-//class j1UserInterface;
+class j1UserInterface;
 class j1Fonts;
 //class j1Collision;
 class j1FadeScene;
@@ -97,7 +97,7 @@ public:
 	//j1Map*				map;
 	//j1PathFinding*		pathfinding;
 	j1Fonts*			font;
-	//j1UserInterface*	ui;
+	j1UserInterface*	gui;
 	//j1EntityManager*	entityManager;
 	//j1Collision*		collision;
 	j1FadeScene*		fade;

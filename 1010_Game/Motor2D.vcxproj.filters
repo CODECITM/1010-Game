@@ -46,6 +46,18 @@
     <ClCompile Include="j1Animation.cpp">
       <Filter>Desenvolupament  ========\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>Desenvolupament  ========\User Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Image.cpp">
+      <Filter>Desenvolupament  ========\User Interface\UIElements</Filter>
+    </ClCompile>
+    <ClCompile Include="j1UserInterface.cpp">
+      <Filter>Desenvolupament  ========\User Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -111,6 +123,24 @@
     <ClInclude Include="j1Animation.h">
       <Filter>Desenvolupament  ========\Tools</Filter>
     </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>Desenvolupament  ========\User Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Image.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
+    </ClInclude>
+    <ClInclude Include="j1UserInterface.h">
+      <Filter>Desenvolupament  ========\User Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionBox.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images\Buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Programacio 2 ===========">
@@ -136,6 +166,18 @@
     </Filter>
     <Filter Include="Desenvolupament  ========\Tools\Timers">
       <UniqueIdentifier>{6e78c60f-52c9-439b-8162-2a3fba9c3ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Desenvolupament  ========\User Interface">
+      <UniqueIdentifier>{f0c23140-0398-43bc-8a1a-a2c07096de4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Desenvolupament  ========\User Interface\UIElements">
+      <UniqueIdentifier>{23694ec4-03cc-4415-a24e-276bc4e848c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Desenvolupament  ========\User Interface\UIElements\Images">
+      <UniqueIdentifier>{07b7a4a4-ea8f-4439-9db3-d577ff4b2cab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Desenvolupament  ========\User Interface\UIElements\Images\Buttons">
+      <UniqueIdentifier>{cedaf018-2ea4-40fd-9c4b-8713beae470d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

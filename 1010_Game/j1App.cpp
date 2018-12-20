@@ -12,6 +12,7 @@
 #include "j1App.h"
 #include "j1Fonts.h"
 #include "j1FadeScene.h"
+#include "j1UserInterface.h"
 #include "Brofiler\Brofiler.h"
 
 // Constructor
@@ -30,7 +31,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	//map = new j1Map();
 	//pathfinding = new j1PathFinding();
 	font = new j1Fonts();
-	//ui = new j1UserInterface();
+	gui = new j1UserInterface();
 	//entityManager = new j1EntityManager();
 	//collision = new j1Collision();
 	fade = new j1FadeScene();
@@ -46,7 +47,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(font);
 	//AddModule(entityManager);
 	//AddModule(collision);
-	//AddModule(ui);
+	AddModule(gui);
 
 	// Scene and fade right before render
 	AddModule(scene);
