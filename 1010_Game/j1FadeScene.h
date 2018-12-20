@@ -42,19 +42,10 @@ public:
 	bool FadeToBlack(float time = 2.0f, fade_type = fade_type::NONE);
 
 public:
-	fade_step GetStep() const {	//IMPROVE: PUT ON CPP
-		return step;
-	}
-	fade_type GetType() const {
-		return type;
-	}
-	fade_type ResetType() {
-		type = fade_type::NONE;
-		return type;
-	}
-	float GetDelay() const {
-		return delay;
-	}
+	fade_step GetStep() const;
+	fade_type GetType() const;
+	fade_type ResetType();
+	float GetDelay() const;
 
 private:
 	float delay;

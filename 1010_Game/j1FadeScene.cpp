@@ -94,3 +94,24 @@ bool j1FadeScene::FadeToBlack(float time, fade_type type)
 
 	return ret;
 }
+
+fade_step j1FadeScene::GetStep() const
+{
+	return step;
+}
+
+fade_type j1FadeScene::GetType() const
+{
+	return type;
+}
+
+fade_type j1FadeScene::ResetType()
+{
+	type = fade_type::NONE;
+	return type;
+}
+
+float j1FadeScene::GetDelay() const
+{
+	return delay;
+}
