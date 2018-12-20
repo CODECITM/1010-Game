@@ -31,19 +31,27 @@ bool j1Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool j1Scene::Start()
 {
+
 	cell_size = 30;
 	int offset = 10;
-	int world_pos = 30;
 
-	grid.position = {10,0 };
+	grid.position = {50,230 };
 
 	//GRID
 	for (int row = 0; row < 10; row++) {
 		for (int col = 0; col < 10; col++) {
-			grid.cells[row][col] = new Cell({ (row + 1),(col + 1) }, new SDL_Rect({ (row + 1) * (cell_size + offset + grid.position.x) , (col + 1) * (cell_size + offset + grid.position.y) ,cell_size, cell_size }), false, Color::GREY);
+			float x = (col + 1) * (cell_size + offset) + grid.position.x;
+			float y = (row + 1) * (cell_size + offset) + grid.position.y;
+
+			grid.cells[row][col] = new Cell({ x, y }, 
+				new SDL_Rect({ (int)x, (int)y ,cell_size, cell_size }),
+				false,
+				Color::GREY);
 		}
 	}
 
+	//FIGURE
+	red_figure = new j1Figure({ 0,0 });
 
 	return true;
 }
@@ -60,22 +68,14 @@ bool j1Scene::Update(float dt)
 {
 	bool ret = true;
 
-	return true;
-}
-
-// Called each loop iteration
-bool j1Scene::PostUpdate()
-{
-	bool ret = true;
-
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
-		return false;
-	uint alpha = 100;
+	red_figure->Update(dt);
+	
+	uint alpha = 255;
 	for (int row = 0; row < 10; row++) {
 		for (int col = 0; col < 10; col++) {
 			switch (grid.cells[row][col]->color) {
 			case(Color::BLUE):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 0, 0, 255, alpha);
 				break;
 			case(Color::GREEN):
 				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
@@ -92,6 +92,41 @@ bool j1Scene::PostUpdate()
 			}
 		}
 	}
+
+	checkFigures();
+
+	return true;
+}
+
+void j1Scene::checkFigures() {
+	if (red_figure->check) {
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
+				if (grid.cells[row][col]->position.x < red_figure->cells[1][1]->position.x - red_figure->rect->w / 2 ||
+					grid.cells[row][col]->position.x > red_figure->cells[1][1]->position.x + red_figure->rect->w / 2 ||
+					grid.cells[row][col]->position.y < red_figure->cells[1][1]->position.y - red_figure->rect->h / 2 ||
+					grid.cells[row][col]->position.y > red_figure->cells[1][1]->position.y + red_figure->rect->h / 2)
+					continue;
+
+				grid.cells[row][col]->color = Color::BLUE;
+				// hiponetusa calculus
+
+			}
+		}
+	}
+}
+
+// Called each loop iteration
+bool j1Scene::PostUpdate()
+{
+	bool ret = true;
+
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
+		return false;
+
+	//Create List of Current figures
+	red_figure->PostUpdate();
+
 	return ret;
 }
 

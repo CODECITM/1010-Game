@@ -2,39 +2,15 @@
 #define __j1SCENE_H__
 
 #include "j1Module.h"
+#include "j1Figure.h"
 
 struct SDL_Texture;
 
-enum Color {
-	GREY = -1,
-	RED,
-	GREEN,
-	YELLOW,
-	BLUE
-};
-
-struct Cell {
-	iPoint position;
-	bool active;
-	Color color;
-	SDL_Rect* rect;
-
-	Cell(iPoint position, SDL_Rect* rect, bool active, Color color) :
-		position(position),
-		active(active),
-		color(color),
-		rect(rect)
-	{}
-};
 
 struct Grid {
 	iPoint position;
 	Cell* cells[10][10];
-};
-
-struct Figure {
-	iPoint position;
-	Cell* cells[3][3];
+	SDL_Rect rect;
 };
 
 
@@ -69,9 +45,11 @@ public:
 
 	bool Save(pugi::xml_node & data) const;
 
+	void checkFigures();
+
 private:
-	Figure grid;
-	Figure red_figure;
+	Grid grid;
+	j1Figure* red_figure;
 	int cell_size;
 
 };
