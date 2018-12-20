@@ -10,6 +10,7 @@
 #include "j1Audio.h"
 #include "j1Scene.h"
 #include "j1App.h"
+#include "j1Fonts.h"
 #include "j1FadeScene.h"
 #include "Brofiler\Brofiler.h"
 
@@ -22,12 +23,17 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 
 	input = new j1Input();
 	win = new j1Window();
+	render = new j1Render();
 	tex = new j1Textures();
 	audio = new j1Audio();
 	scene = new j1Scene();
-	render = new j1Render();
+	//map = new j1Map();
+	//pathfinding = new j1PathFinding();
+	font = new j1Fonts();
+	//ui = new j1UserInterface();
+	//entityManager = new j1EntityManager();
+	//collision = new j1Collision();
 	fade = new j1FadeScene();
-
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -35,6 +41,12 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(win);
 	AddModule(tex);
 	AddModule(audio);
+	//AddModule(map);
+	//AddModule(pathfinding);
+	AddModule(font);
+	//AddModule(entityManager);
+	//AddModule(collision);
+	//AddModule(ui);
 
 	// Scene and fade right before render
 	AddModule(scene);

@@ -15,12 +15,17 @@ class j1Render;
 class j1Textures;
 class j1Audio;
 class j1Scene;
+//class j1Map;
+//class j1PathFinding;
+//class j1EntityManager;
+//class j1UserInterface;
+class j1Fonts;
+//class j1Collision;
 class j1FadeScene;
 
 class j1App
 {
 public:
-
 	// Constructor
 	j1App(int argc, char* args[]);
 
@@ -59,7 +64,6 @@ public:
 
 private:
 
-
 	// Call modules before each loop iteration
 	void PrepareUpdate();
 
@@ -80,7 +84,9 @@ private:
 	bool SavegameNow() const;
 
 public:
+
 	pugi::xml_document save_gamedata;
+	
 	// Modules
 	j1Window*			win;
 	j1Input*			input;
@@ -88,7 +94,14 @@ public:
 	j1Textures*			tex;
 	j1Audio*			audio;
 	j1Scene*			scene;
+	//j1Map*				map;
+	//j1PathFinding*		pathfinding;
+	j1Fonts*			font;
+	//j1UserInterface*	ui;
+	//j1EntityManager*	entityManager;
+	//j1Collision*		collision;
 	j1FadeScene*		fade;
+
 	float previous_time;
 	float current_time;
 	uint				frame_cap;
