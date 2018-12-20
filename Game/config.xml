@@ -1,65 +1,17 @@
 <!-- Config file for the game -->
 
 <config>
-  <app framerate_cap ="30">
-    <title>Game Development Testbed</title>
+  <app mustCap="true" fpsCap="30">
+    <name>Get Hooked v0.4</name>
     <organization>UPC</organization>
+    <save>save_game.xml</save>
+    <load>save_game.xml</load>
   </app>
 
-  <audio>
-    <music volume="1">
-      <folder>Assets/audio/music/</folder>
-    </music>
-    <fx volume="1">
-      <folder>Assets/audio/fx/</folder>
-    </fx>
-  </audio>
-	
   <renderer>
     <vsync value="false"/>
   </renderer>
 
-   <gui>
-     <atlas file="Assets/gui/Atlas1.6.png"/>
-     <logo file="Assets/gui/Tails_Odyssey_mini.png"/>
-     <animations>
-       <button>
-         <frame x="482" y="0" w="115" h="58"/>
-         <frame x="482" y="60" w="115" h="58"/>
-         <frame x="482" y="121" w="115" h="58"/>
-       </button>
-       <button2>
-         <frame x="699" y="60" w="76" h="58"/>
-         <frame x="699" y="120" w="76" h="58"/>
-         <frame x="699" y="181" w="76" h="58"/>
-       </button2>
-       <button3>
-         <frame x="619" y="60" w="76" h="58"/>
-         <frame x="619" y="120" w="76" h="58"/>
-         <frame x="619" y="181" w="76" h="58"/>
-       </button3>
-       <coin loop="true" speed="8.0">
-         <frame x="0" y="292" w="47" h="39"/>
-         <frame x="46" y="292" w="48" h="39"/>
-         <frame x="93" y="292" w="48" h="39"/>
-         <frame x="140" y="292" w="47" h="39"/>
-         <frame x="186" y="292" w="48" h="39"/>
-       </coin>
-       <lives loop="false" speed="2.0">
-         <frame x="241" y="292" w="21" h="39"/>
-         <frame x="262" y="292" w="21" h="39"/>
-         <frame x="283" y="292" w="21" h="39"/>
-         <frame x="304" y="292" w="21" h="39"/>
-       </lives>
-     </animations>
-     <btn_fx>Click.wav</btn_fx>
-  </gui>
-
-  <fonts>
-    <folder>Assets/fonts/</folder>    
-    <default_font file="Pix Riddim.ttf" size="12"/>
-  </fonts>
-    
   <window>
     <resolution width="576" height="1024" scale="1"/>
     <fullscreen value="false"/>
@@ -67,6 +19,39 @@
     <resizable value="false"/>
     <fullscreen_window value="false"/>
   </window>
+  
+  <audio volume="100">
+    <music volume="80">
+      <folder>audio/music/</folder>
+      <menus>
+        <mainMenu></mainMenu>
+      </menus>
+      <maps>
+        
+      </maps>
+    </music>
+    <sfx volume="100">
+      <folder>audio/fx/</folder>
+      <ui>
+        <button>Button.wav</button>
+      </ui>
+      <entities>
+        
+      </entities>
+    </sfx>
+  </audio>
+
+   <gui>
+     <atlas file="Assets/gui/Atlas1.6.png"/>
+     <logo file=""/>
+     
+  </gui>
+
+  <fonts>
+    <folder>fonts/</folder>    
+    <defaultFont file="open_sans/OpenSans-Regular.ttf" size="10" />
+    
+  </fonts>
 
   <map>
     <folder>Assets/maps/</folder>

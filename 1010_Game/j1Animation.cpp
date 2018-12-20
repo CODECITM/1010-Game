@@ -63,6 +63,6 @@ void j1Animation::AllocAnimation(int posX, int posY, int sizeX, int sizeY, int n
 	int xCounter = 0;
 
 	for (int i = numFrames; i > 0; i--) {
-		PushBack({ posX + posY * xCounter++, posY,  sizeX, sizeY });
+		PushBack({ posX + posX * xCounter++, posY,  sizeX, sizeY });
 	}
 }

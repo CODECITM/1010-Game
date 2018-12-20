@@ -83,10 +83,12 @@ private:
 	bool LoadGameNow();
 	bool SavegameNow() const;
 
-public:
+	// Framerate calculations (returns delayTime)
+	void FramerateLogic();
+	p2SString DefaultTitle();
+	p2SString DebugTitle();
 
-	pugi::xml_document save_gamedata;
-	
+public:
 	// Modules
 	j1Window*			win;
 	j1Input*			input;
@@ -102,13 +104,8 @@ public:
 	//j1Collision*		collision;
 	j1FadeScene*		fade;
 
-	float previous_time;	//CHANGE/FIX: This should not be public
-	float current_time;
-	uint				frame_cap;
-	float accumulated = 0;
-	float				dt;	//end
-
-	j1PerfTimer	p_timer;
+	bool debugMode;
+	bool mustShutDown = false;
 
 private:
 
@@ -118,6 +115,7 @@ private:
 	int					argc;
 	char**				args;
 
+	p2SString			name;
 	p2SString			title;
 	p2SString			organization;
 
@@ -125,23 +123,28 @@ private:
 	bool				want_to_load;
 	p2SString			load_game;
 	mutable p2SString	save_game;
+	pugi::xml_document	save_gamedata;
 
-	j1PerfTimer			ptimer;
-	uint64				frame_count = 0;
-	j1Timer				startup_time;
-	j1Timer				frame_time;
-	j1Timer				last_sec_frame_time;
-	uint32				last_sec_frame_count = 0;
-	uint32				prev_last_sec_frame_count = 0;
-	float				avg_fps;
-	float				seconds_since_startup;
-	uint32				last_frame_ms;
-	uint32				frames_on_last_update;
-	bool				cap_frames = true;
-	int					capped_ms;
-	uint64				b_timer = 0;
-	uint				b_score = 0;
+	p2List<p2SString>	save_list;	//IMPROVE: Make the game work with a list of saved files
+	ushort				save_number;
 
+	//Framerate
+	bool				mustCapFPS;
+	j1PerfTimer			perfTimer;
+	j1PerfTimer			delayTimer;
+	uint64				totalFrameCount = 0;
+	j1Timer				gameTimer;
+	j1Timer				frameTimer;
+	j1Timer				secTimer;
+	uint32				currFPS = 0;
+	uint32				prevFPS = 0;
+	uint16				fpsCap;
+	float				dt = 0;
+
+	// Readability variables (not essential, but simplifies reading)
+	float avgFPS;
+	float gameTime;
+	uint32 lastFrameMs;
 };
 
 extern j1App* App;

@@ -18,7 +18,7 @@
 // Constructor
 j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 {
-	PERF_START(ptimer);
+	PERF_START(perfTimer);
 
 	want_to_save = want_to_load = false;
 
@@ -56,7 +56,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	// render last to swap buffer
 	AddModule(render);
 
-	PERF_PEEK(ptimer);
+	PERF_PEEK(perfTimer);
 }
 
 // Destructor
@@ -83,7 +83,7 @@ void j1App::AddModule(j1Module* module)
 // Called before render is available
 bool j1App::Awake()
 {
-	PERF_START(ptimer);
+	PERF_START(perfTimer);
 
 	pugi::xml_document	config_file;
 	pugi::xml_node		config;
@@ -100,14 +100,14 @@ bool j1App::Awake()
 		// self-config
 		ret = true;
 		app_config = config.child("app");
-		title.create(app_config.child("title").child_value());
+		name.create(app_config.child("title").child_value());
 		organization.create(app_config.child("organization").child_value());
-		// TODO 1: Read from config file your framerate cap
-		frame_cap = config.child("app").attribute("framerate_cap").as_int(-1);
-		if (frame_cap > 0)
-		{
-			capped_ms = 1000 / frame_cap;
-		}
+		
+		save_game.create(app_config.child("save").child_value());	// @Carles
+		load_game.create(app_config.child("load").child_value());	// @Carles
+
+		fpsCap = app_config.attribute("fpsCap").as_uint();
+		mustCapFPS = app_config.attribute("mustCap").as_bool();
 	}
 
 	if(ret == true)
@@ -121,7 +121,8 @@ bool j1App::Awake()
 			item = item->next;
 		}
 	}
-	PERF_PEEK(ptimer);
+
+	PERF_PEEK(perfTimer);
 
 	return ret;
 }
@@ -129,9 +130,7 @@ bool j1App::Awake()
 // Called before the first frame
 bool j1App::Start()
 {
-	//DISABLE MODULES YOU DON'T WANT
-
-	PERF_START(ptimer);
+	PERF_START(perfTimer);
 
 	bool ret = true;
 	p2List_item<j1Module*>* item;
@@ -139,12 +138,13 @@ bool j1App::Start()
 
 	while(item != NULL && ret == true)
 	{
-		if(item->data->active)
-			ret = item->data->Start();
+		ret = item->data->Start();
 		item = item->next;
 	}
 
-	PERF_PEEK(ptimer);
+	gameTimer.Start();
+
+	PERF_PEEK(perfTimer);
 
 	return ret;
 }
@@ -152,8 +152,6 @@ bool j1App::Start()
 // Called each loop iteration
 bool j1App::Update()
 {
-	BROFILER_CATEGORY("Update", Profiler::Color::Green)
-
 	bool ret = true;
 	PrepareUpdate();
 
@@ -170,6 +168,10 @@ bool j1App::Update()
 		ret = PostUpdate();
 
 	FinishUpdate();
+
+	if (mustShutDown)
+		ret = false;
+
 	return ret;
 }
 
@@ -191,27 +193,44 @@ pugi::xml_node j1App::LoadConfig(pugi::xml_document& config_file) const
 // ---------------------------------------------
 void j1App::PrepareUpdate()
 {
+	BROFILER_CATEGORY("App FinishUpdate", Profiler::Color::Gray);
+
+	if (App->input->GetKey(SDL_SCANCODE_F11) == KEY_DOWN)
+		mustCapFPS = !mustCapFPS;
+
+	totalFrameCount++;
+	currFPS++;
+	dt = frameTimer.ReadSec();
+
+	// Restart timers
+	frameTimer.Start();
+	delayTimer.Start();
+
+	/*
 	frame_count++;
 	last_sec_frame_count++;
 
-	ptimer.Start();
+	perfTimer.Start();*/
 }
 
 // ---------------------------------------------
 void j1App::FinishUpdate()
 {
+	BROFILER_CATEGORY("App FinishUpdate", Profiler::Color::Gray);
+
 	if(want_to_save == true)
 		SavegameNow();
 
 	if(want_to_load == true)
 		LoadGameNow();
 	
+	FramerateLogic();
 }
 
 // Call modules before each loop iteration
 bool j1App::PreUpdate()
 {
-	BROFILER_CATEGORY("Preupdate", Profiler::Color::Orchid);
+	BROFILER_CATEGORY("App PreUpdate", Profiler::Color::GreenYellow);
 
 	bool ret = true;
 	p2List_item<j1Module*>* item;
@@ -226,7 +245,7 @@ bool j1App::PreUpdate()
 			continue;
 		}
 
-			ret = item->data->PreUpdate();
+		ret = item->data->PreUpdate();
 	}
 
 	return ret;
@@ -235,18 +254,35 @@ bool j1App::PreUpdate()
 // Call modules on each loop iteration
 bool j1App::DoUpdate()
 {
+	BROFILER_CATEGORY("App AllUpdates", Profiler::Color::Yellow);
+
+	//if (App->scene->gamePaused == true)
+		//dt = 0.0f;
+
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	item = modules.start;
 	j1Module* pModule = NULL;
 
-	for(item = modules.start; item != NULL && ret == true; item = item->next)
+	for (item = modules.start; item != NULL && ret == true; item = item->next)	//All logic
 	{
 		pModule = item->data;
 
-		if(pModule->active == false) {
+		if (pModule->active == false) {
 			continue;
 		}
+
+		//ret = item->data->UpdateTick(dt);	//CHANGE/FIX: Apply change
+	}
+
+	for (item = modules.start; item != NULL && ret == true; item = item->next)	//All graphic
+	{
+		pModule = item->data;
+
+		if (pModule->active == false) {
+			continue;
+		}
+
 		ret = item->data->Update(dt);
 	}
 
@@ -256,7 +292,8 @@ bool j1App::DoUpdate()
 // Call modules after each loop iteration
 bool j1App::PostUpdate()
 {
-	BROFILER_CATEGORY("PostUpdate", Profiler::Color::Blue)
+	BROFILER_CATEGORY("App PostUpdate", Profiler::Color::YellowGreen);
+
 	bool ret = true;
 	p2List_item<j1Module*>* item;
 	j1Module* pModule = NULL;
@@ -278,15 +315,20 @@ bool j1App::PostUpdate()
 // Called before quitting
 bool j1App::CleanUp()
 {
+	PERF_START(perfTimer);
+
 	bool ret = true;
+
 	p2List_item<j1Module*>* item;
 	item = modules.end;
 
-	while(item != NULL && ret == true)
+	while (item != NULL && ret == true)
 	{
 		ret = item->data->CleanUp();
 		item = item->prev;
 	}
+
+	PERF_PEEK(perfTimer);
 
 	return ret;
 }
@@ -341,7 +383,8 @@ void j1App::GetSaveGames(p2List<p2SString>& list_to_fill) const
 	// need to add functionality to file_system module for this to work
 }
 
-pugi::xml_node j1App::GetSaveData() {
+pugi::xml_node j1App::GetSaveData()
+{
 	pugi::xml_node root;
 
 	pugi::xml_parse_result result = save_gamedata.load_file(load_game.GetString());
@@ -360,7 +403,6 @@ pugi::xml_node j1App::GetSaveData() {
 
 bool j1App::LoadGameNow()
 {
-	BROFILER_CATEGORY("LoadGame", Profiler::Color::Orange)
 	bool ret = false;
 
 	pugi::xml_node root = GetSaveData();
@@ -392,7 +434,6 @@ bool j1App::LoadGameNow()
 
 bool j1App::SavegameNow() const
 {
-	BROFILER_CATEGORY("SaveGame", Profiler::Color::Purple)
 	bool ret = true;
 
 	LOG("Saving Game State to %s...", save_game.GetString());
@@ -423,4 +464,68 @@ bool j1App::SavegameNow() const
 	data.reset();
 	want_to_save = false;
 	return ret;
+}
+
+void j1App::FramerateLogic()
+{
+	if (secTimer.Read() > 1000) {
+		secTimer.Start();
+		prevFPS = currFPS;
+		currFPS = 0;
+	}
+
+	avgFPS = float(totalFrameCount) / gameTimer.ReadSec();
+	gameTime = gameTimer.ReadSec();
+	lastFrameMs = frameTimer.Read();
+
+	if (debugMode) {
+		App->win->SetTitle(DebugTitle().GetString());
+	}
+	else {
+		App->win->SetTitle(DefaultTitle().GetString());
+	}
+
+	if (mustCapFPS) {
+		int delayTime = (1000 / fpsCap) - lastFrameMs;
+		if (delayTime > 0) {
+			SDL_Delay((Uint32)delayTime);
+			LOG("We waited for %u and got back in %f", delayTime, delayTimer.ReadMs());
+		}
+	}
+}
+
+p2SString j1App::DebugTitle()	// @Carles
+{
+	/*iPoint playerPos;
+	if (App->entityManager->player != nullptr) {
+		playerPos = { (int)App->entityManager->player->GetPosition().x, (int)App->entityManager->player->GetPosition().y, };
+	}
+	else {
+		playerPos = { 0, 0 };
+	}*/
+
+	title.create("%s (FPS: %i / Av.FPS: %.2f / MsPF: %02u ms / fpsCap: %i / Vsync: %i / Play Time: %.3f / Camera: %dx%d)",
+		name.GetString(),
+		prevFPS,
+		avgFPS,
+		lastFrameMs,
+		(int)mustCapFPS,
+		(int)App->render->vSync,
+		gameTime,
+		App->render->camera.x, App->render->camera.y);
+
+	return title;
+}
+
+p2SString j1App::DefaultTitle()	// @Carles
+{
+	title.create("%s (FPS: %i / Av.FPS: %.2f / MsPF: %02u ms / fpsCap: %i / Vsync: %i)",
+		name.GetString(),
+		prevFPS,
+		avgFPS,
+		lastFrameMs,
+		(int)mustCapFPS,
+		(int)App->render->vSync);
+
+	return title;
 }
