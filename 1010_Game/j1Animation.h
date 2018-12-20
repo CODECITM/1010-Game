@@ -18,56 +18,21 @@ private:
 
 public:
 
-	void PushBack(const SDL_Rect& rect)
-	{
-		frames[last_frame++] = rect;
-	}
+	void PushBack(const SDL_Rect& rect);
 
-	SDL_Rect& GetCurrentFrame(float dt)
-	{
-		current_frame += speed * dt;
-		if (current_frame >= last_frame)
-		{
-			current_frame = (loop) ? 0.0f : last_frame - 1;
-			loops++;
-		}
+	SDL_Rect& AdvanceAnimation(float dt = 1);
 
-		return frames[(int)current_frame];
-	}
+	int GetCurrentFrame();
+	SDL_Rect& GetFrameRect(int frame);
 
-	SDL_Rect& GetFrameRect(int frame)
-	{
-		return frames[(int)frame];
-	}
+	bool Finished() const;
+	void Reset();
 
-	bool Finished() const
-	{
-		return loops > 0;
-	}
+	void SetFrame(int frame);
+	bool IsLastFrame();
 
-	void Reset()
-	{
-		current_frame = 0;
-		loops = 0;
-	}
-
-	void setFrame(int frame) {
-		current_frame = frame; 
-		loops = 0.0;
-	}
-
-	int getFrame() {
-		return current_frame;
-	}
-
-	bool islastframe() {
-		if (current_frame >= last_frame-1) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
+	// @Carles: Automatically allocates an animation that consists into a single row of frames of the same size
+	void AllocAnimation(int posX, int posY, int sizeX, int sizeY, int numFrames);
 };
 
 #endif
