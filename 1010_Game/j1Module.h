@@ -13,12 +13,6 @@ class j1App;
 
 struct Collider;
 
-enum class Levels {
-	NONE = -1,
-	Scene,
-	Scene2
-};
-
 class j1Module
 {
 public:
