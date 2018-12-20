@@ -10,7 +10,7 @@
 #include "j1Audio.h"
 #include "j1Scene.h"
 #include "j1App.h"
-#include "j1FadeToBlack.h"
+#include "j1FadeScene.h"
 #include "Brofiler\Brofiler.h"
 
 // Constructor
@@ -26,7 +26,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	audio = new j1Audio();
 	scene = new j1Scene();
 	render = new j1Render();
-	fade = new j1FadeToBlack();
+	fade = new j1FadeScene();
 
 
 	// Ordered for awake / Start / Update
@@ -35,9 +35,10 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(win);
 	AddModule(tex);
 	AddModule(audio);
+
+	// Scene and fade right before render
 	AddModule(scene);
 	AddModule(fade);
-
 
 	// render last to swap buffer
 	AddModule(render);

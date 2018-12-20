@@ -15,7 +15,7 @@ class j1Render;
 class j1Textures;
 class j1Audio;
 class j1Scene;
-class j1FadeToBlack;
+class j1FadeScene;
 
 class j1App
 {
@@ -88,7 +88,7 @@ public:
 	j1Textures*			tex;
 	j1Audio*			audio;
 	j1Scene*			scene;
-	j1FadeToBlack*		fade;
+	j1FadeScene*		fade;
 	float previous_time;
 	float current_time;
 	uint				frame_cap;
