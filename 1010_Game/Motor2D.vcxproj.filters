@@ -43,6 +43,9 @@
     <ClCompile Include="j1Timer.cpp">
       <Filter>Desenvolupament  ========\Tools\Timers</Filter>
     </ClCompile>
+    <ClCompile Include="j1Animation.cpp">
+      <Filter>Desenvolupament  ========\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -90,9 +93,6 @@
     <ClInclude Include="PugiXml\src\pugixml.hpp">
       <Filter>Desenvolupament  ========\Tools\PuguiXML</Filter>
     </ClInclude>
-    <ClInclude Include="j1Animation.h">
-      <Filter>Desenvolupament  ========</Filter>
-    </ClInclude>
     <ClInclude Include="j1Audio.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClInclude>
@@ -107,6 +107,9 @@
     </ClInclude>
     <ClInclude Include="j1Timer.h">
       <Filter>Desenvolupament  ========\Tools\Timers</Filter>
+    </ClInclude>
+    <ClInclude Include="j1Animation.h">
+      <Filter>Desenvolupament  ========\Tools</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

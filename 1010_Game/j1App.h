@@ -102,11 +102,11 @@ public:
 	//j1Collision*		collision;
 	j1FadeScene*		fade;
 
-	float previous_time;
+	float previous_time;	//CHANGE/FIX: This should not be public
 	float current_time;
 	uint				frame_cap;
 	float accumulated = 0;
-	float				dt;
+	float				dt;	//end
 
 	j1PerfTimer	p_timer;
 

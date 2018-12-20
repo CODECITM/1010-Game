@@ -79,6 +79,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="j1Animation.cpp" />
     <ClCompile Include="j1Audio.cpp" />
     <ClCompile Include="j1FadeScene.cpp" />
     <ClCompile Include="j1Fonts.cpp" />
