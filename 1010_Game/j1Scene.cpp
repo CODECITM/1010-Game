@@ -31,14 +31,19 @@ bool j1Scene::Awake(pugi::xml_node& config)
 // Called before the first frame
 bool j1Scene::Start()
 {
-	cell_size = 50;
+	cell_size = 30;
 	int offset = 10;
+	int world_pos = 30;
 
+	grid.position = {10,0 };
+
+	//GRID
 	for (int row = 0; row < 10; row++) {
 		for (int col = 0; col < 10; col++) {
-			grid[row][col] = new Cell({ row,col }, new SDL_Rect({ (row + 1) * (cell_size + offset) , (col + 1) * (cell_size + offset) ,cell_size, cell_size }), false, Color::GREY);
+			grid.cells[row][col] = new Cell({ (row + 1),(col + 1) }, new SDL_Rect({ (row + 1) * (cell_size + offset + grid.position.x) , (col + 1) * (cell_size + offset + grid.position.y) ,cell_size, cell_size }), false, Color::GREY);
 		}
 	}
+
 
 	return true;
 }
@@ -54,28 +59,7 @@ bool j1Scene::PreUpdate()
 bool j1Scene::Update(float dt)
 {
 	bool ret = true;
-	uint alpha = 100;
-	for (int row = 0; row < 10; row++) {
-		for (int col = 0; col < 10; col++) {
-			switch (grid[row][col]->color) {
-			case(Color::BLUE):
-				ret = App->render->DrawQuad(*grid[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			case(Color::GREEN):
-				ret = App->render->DrawQuad(*grid[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			case(Color::GREY):
-				ret = App->render->DrawQuad(*grid[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			case(Color::RED):
-				ret = App->render->DrawQuad(*grid[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			case(Color::YELLOW):
-				ret = App->render->DrawQuad(*grid[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			}
-		}
-	}
+
 	return true;
 }
 
@@ -83,6 +67,31 @@ bool j1Scene::Update(float dt)
 bool j1Scene::PostUpdate()
 {
 	bool ret = true;
+
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
+		return false;
+	uint alpha = 100;
+	for (int row = 0; row < 10; row++) {
+		for (int col = 0; col < 10; col++) {
+			switch (grid.cells[row][col]->color) {
+			case(Color::BLUE):
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				break;
+			case(Color::GREEN):
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				break;
+			case(Color::GREY):
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				break;
+			case(Color::RED):
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				break;
+			case(Color::YELLOW):
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				break;
+			}
+		}
+	}
 	return ret;
 }
 

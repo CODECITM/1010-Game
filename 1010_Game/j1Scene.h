@@ -27,6 +27,17 @@ struct Cell {
 	{}
 };
 
+struct Grid {
+	iPoint position;
+	Cell* cells[10][10];
+};
+
+struct Figure {
+	iPoint position;
+	Cell* cells[3][3];
+};
+
+
 class j1Scene : public j1Module
 {
 public:
@@ -59,7 +70,8 @@ public:
 	bool Save(pugi::xml_node & data) const;
 
 private:
-	Cell* grid[10][10];
+	Figure grid;
+	Figure red_figure;
 	int cell_size;
 
 };
