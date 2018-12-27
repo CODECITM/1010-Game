@@ -51,7 +51,13 @@ bool j1Scene::Start()
 	}
 
 	//FIGURE
-	red_figure = new j1Figure({ 0,0 });
+	figures.add(new j1Figure({ 0,50 },RED));
+	figures.add(new j1Figure({ 150,50 }, RED));
+	figures.add(new j1Figure({ 300,50 }, RED));
+
+	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+		item->data->Start();
+	}
 
 	return true;
 }
@@ -68,7 +74,9 @@ bool j1Scene::Update(float dt)
 {
 	bool ret = true;
 
-	red_figure->Update(dt);
+	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+		item->data->Update(dt);
+	}
 	
 	uint alpha = 255;
 	for (int row = 0; row < 10; row++) {
@@ -84,10 +92,10 @@ bool j1Scene::Update(float dt)
 				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
 				break;
 			case(Color::RED):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 0, 0, alpha);
 				break;
 			case(Color::YELLOW):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 0, alpha);
 				break;
 			}
 		}
@@ -99,21 +107,79 @@ bool j1Scene::Update(float dt)
 }
 
 void j1Scene::checkFigures() {
-	if (red_figure->check) {
-		for (int row = 0; row < 10; row++) {
-			for (int col = 0; col < 10; col++) {
-				if (grid.cells[row][col]->position.x < red_figure->cells[1][1]->position.x - red_figure->rect->w / 2 ||
-					grid.cells[row][col]->position.x > red_figure->cells[1][1]->position.x + red_figure->rect->w / 2 ||
-					grid.cells[row][col]->position.y < red_figure->cells[1][1]->position.y - red_figure->rect->h / 2 ||
-					grid.cells[row][col]->position.y > red_figure->cells[1][1]->position.y + red_figure->rect->h / 2)
-					continue;
+	iPoint cell;
+	float distance = -1.0f;
 
-				grid.cells[row][col]->color = Color::BLUE;
-				// hiponetusa calculus
+	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+		if (item->data->check) {
+			for (int row = 0; row < 10; row++) {
+				for (int col = 0; col < 10; col++) {
+					if (grid.cells[row][col]->position.x < item->data->cells[1][1]->position.x - item->data->rect->w / 2 ||
+						grid.cells[row][col]->position.x > item->data->cells[1][1]->position.x + item->data->rect->w / 2 ||
+						grid.cells[row][col]->position.y < item->data->cells[1][1]->position.y - item->data->rect->h / 2 ||
+						grid.cells[row][col]->position.y > item->data->cells[1][1]->position.y + item->data->rect->h / 2)
+						continue;
 
+					// distance calculus
+					fPoint position1 = grid.cells[row][col]->position;
+					fPoint position2 = item->data->cells[1][1]->position;
+					float c_distance = position2.DistanceTo(position1);
+					//if (c_distance < 10) {
+					if (distance == -1.0f || c_distance < distance && c_distance) {
+						LOG("distance:%f", c_distance);
+						distance = c_distance;
+						cell = iPoint({ row, col });
+					}
+					//}
+
+				}
+			}
+			if (distance != -1.0f) {
+				fPoint movement = grid.cells[cell.x][cell.y]->position - item->data->cells[1][1]->position;
+				item->data->moveCells(movement);
+				if (isValid(cell, item->data)) {
+					item->data->enable = false;
+				}
+				item->data->resetFigure();
+				item->data->check = false;
 			}
 		}
 	}
+
+}
+
+bool j1Scene::isValid(iPoint cell, j1Figure* figure) {
+	bool ret = true;
+	p2List<iPoint> cells;
+	for (int i = -1; i <= 1 ; i++) {
+		for (int j = -1; j <= 1; j++) {
+			if (figure->cells[i + 1][j + 1]->active) {
+				if ((cell.y + j >= 0 && cell.y + j < 10) && (cell.x + i >= 0 && cell.x + i < 10)) {
+					if (grid.cells[cell.x + i][cell.y + j]->position == figure->cells[i + 1][j + 1]->position 
+						&& !grid.cells[cell.x + i][cell.y + j]->active){
+						cells.add(iPoint({ cell.x + i, cell.y + j }));
+					}
+					else
+						ret = false;
+				}
+				else
+					ret = false;
+			}
+		}
+	}
+
+	if (ret) {
+		for (p2List_item<iPoint>* item = cells.start; item != nullptr; item = item->next) {
+			int row = item->data.x;
+			int col = item->data.y;
+			grid.cells[row][col]->active = true;
+			grid.cells[row][col]->color = figure->color;
+		}
+	}
+
+	cells.clear();
+
+	return ret;
 }
 
 // Called each loop iteration
@@ -125,7 +191,10 @@ bool j1Scene::PostUpdate()
 		return false;
 
 	//Create List of Current figures
-	red_figure->PostUpdate();
+	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+		if (item->data->enable)
+			item->data->PostUpdate();
+	}
 
 	return ret;
 }
@@ -133,6 +202,19 @@ bool j1Scene::PostUpdate()
 // Called before quitting
 bool j1Scene::CleanUp()
 {
+	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+			item->data->CleanUp();
+			delete item->data;
+	}
+	figures.clear();
+
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			delete grid.cells[i][j];
+			grid.cells[i][j] = nullptr;
+		}
+	}
+
 	return true;
 }
 

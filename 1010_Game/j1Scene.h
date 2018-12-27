@@ -10,9 +10,7 @@ struct SDL_Texture;
 struct Grid {
 	iPoint position;
 	Cell* cells[10][10];
-	SDL_Rect rect;
 };
-
 
 class j1Scene : public j1Module
 {
@@ -47,9 +45,11 @@ public:
 
 	void checkFigures();
 
+	bool isValid(iPoint cell, j1Figure* figure);
+
 private:
 	Grid grid;
-	j1Figure* red_figure;
+	p2List<j1Figure*> figures;
 	int cell_size;
 
 };

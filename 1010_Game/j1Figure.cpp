@@ -5,10 +5,13 @@
 #include "j1Render.h"
 #include "j1Window.h"
 #include "j1Figure.h"
+#include "Figure_Templates.h"
 
 
 
-j1Figure::j1Figure(fPoint position) : position(position) {
+j1Figure::j1Figure(fPoint position, Color color) : position(position), color(color){
+	bool active;
+	Color c_color;
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
 			float x, y;
@@ -23,11 +26,24 @@ j1Figure::j1Figure(fPoint position) : position(position) {
 			else
 				y = row + position.y;
 
+			switch (color) {
+			case(RED):
+				active = r_figure[row][col];
+				LOG("");
+				break;
+			case(BLUE):
+				break;
+			};
+
+			if (!active)
+				c_color = GREY;
+			else
+				c_color = RED;
 
 			cells[row][col] = new Cell({ x,y },
 				new SDL_Rect({ (int)x, (int)y, cell_size, cell_size }),
-				false,
-				Color::RED);
+				active,
+				c_color);
 		}
 	}
 
@@ -41,13 +57,24 @@ j1Figure::j1Figure(fPoint position) : position(position) {
 j1Figure::~j1Figure(){}
 
 bool j1Figure::Start() {
-	
+	enable = true;
+	o_position = position;
+	return true;
+}
+
+bool j1Figure::CleanUp() {
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			delete cells[i][j];
+		}
+	}
+	delete rect;
 	return true;
 }
 
 bool j1Figure::Update(float dt) {
-
-	moveFigure();
+	if(enable)
+		moveFigure();
 
 	rect->x = position.x;
 	rect->y = position.y;
@@ -83,9 +110,6 @@ bool j1Figure::PostUpdate() {
 			}
 		}
 	}
-
-
-
 	return ret;
 }
 
@@ -109,12 +133,10 @@ void j1Figure::moveFigure()
 		newGrabOffset = { (float)mousePos.x - position.x, (float)mousePos.y - position.y };
 
 		fPoint mouseMov = { newGrabOffset.x - grabOffset.x, newGrabOffset.y - grabOffset.y };
-		position.x += mouseMov.x;
-		position.y += mouseMov.y;
 
 		moveCells(mouseMov);
 	}
-	else {
+	else if(App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP){
 		setMouseGrabPos = false;
 		check = true;
 	}
@@ -127,14 +149,26 @@ bool j1Figure::MouseOnFigure() {
 	return !(position.y + rect->h < mousePos.y || position.y > mousePos.y || position.x + rect->w < mousePos.x || position.x > mousePos.x);
 }
 
+void j1Figure::resetFigure() {
+	moveCells(o_position - position);
+
+	position = o_position;
+}
+
 bool j1Figure::moveCells(fPoint movement) {
+	position.x += movement.x;
+	position.y += movement.y;
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
-			LOG("%i", 1);
 			cells[row][col]->position += movement;
 			cells[row][col]->rect->x = cells[row][col]->position.x;
 			cells[row][col]->rect->y = cells[row][col]->position.y;
 		}
 	}
 	return true;
+}
+
+Cell::~Cell()
+{
+	delete rect;
 }

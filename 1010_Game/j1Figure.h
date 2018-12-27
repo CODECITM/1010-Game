@@ -14,26 +14,29 @@ enum Color {
 };
 
 struct Cell {
-	fPoint position;
-	bool active;
-	Color color;
-	SDL_Rect* rect;
-
 	Cell(fPoint position, SDL_Rect* rect, bool active, Color color) :
 		position(position),
 		active(active),
 		color(color),
 		rect(rect)
 	{}
+	~Cell();
+
+	fPoint position;
+	bool active;
+	Color color;
+	SDL_Rect* rect;
 };
 
-class j1Figure : public j1Module
+class j1Figure
 {
 public:
-	j1Figure(fPoint position);
+	j1Figure(fPoint position, Color color);
 	~j1Figure();
 
 	bool Start();
+
+	bool CleanUp();
 
 	bool Update(float dt);
 
@@ -43,17 +46,20 @@ public:
 
 	bool MouseOnFigure();
 
-	bool moveCells(fPoint movement);
+	void resetFigure();
 
-	void checkNearPoint();
+	bool moveCells(fPoint movement);
 
 public:
 	fPoint grabOffset;
+	fPoint o_position;
 	fPoint position;
 	Cell* cells[3][3];
 	SDL_Rect* rect;
 	bool setMouseGrabPos = false;
 	bool check = false;
+	Color color;
+	bool enable = false;
 
 private:
 	int offset = 10;
