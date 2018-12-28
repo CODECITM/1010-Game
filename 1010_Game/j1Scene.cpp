@@ -96,6 +96,7 @@ void j1Scene::RegisterButtonData(pugi::xml_node& node, SDL_Rect* button)
 bool j1Scene::Start()
 {
 	bool ret = true;
+	_TTF_Font* text = App->font->textFont;
 
 	texture_bricks = App->tex->Load(image_string.GetString());
 
@@ -123,16 +124,17 @@ bool j1Scene::Start()
 	switch (scene) {
 	case scene_type::MAIN_MENU:
 		UIElement* parent;
+		
 
-		/*App->gui->CreateText({ 576 / 4, 100 }, "Get Hooked", DEFAULT_COLOR, App->font->defaultFont, false);
-		parent = App->gui->CreateActionBox(&StartGame, { 576 / 4, 180 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Continue", DEFAULT_COLOR, App->font->defaultFont, false, parent);
-		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 4, 270 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, App->font->defaultFont, false, parent);
-		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 4, 315 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, App->font->defaultFont, false, parent);
+		App->gui->CreateText({ 576 / 2, 100 }, "Get Hooked", DEFAULT_COLOR, App->font->defaultFont, false);
+		parent = App->gui->CreateActionBox(&CloseGame, { 576 / 2, 180 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Continue", DEFAULT_COLOR, text, false, parent);
+		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 2, 350 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, text, false, parent);
+		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 500 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, text, false, parent);
 		App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
-		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);*/
+		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
 
 		//App->audio->PlayMusic(App->audio->musicMainMenu.GetString());
 		break;
@@ -143,6 +145,7 @@ bool j1Scene::Start()
 		
 		break;
 	case scene_type::GAME:
+		
 		break;
 	}
 
@@ -167,18 +170,18 @@ bool j1Scene::PreUpdate()
 bool j1Scene::Update(float dt)
 {
 	bool ret = true;
+	
+	if (scene == scene_type::GAME) {
+		for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+			item->data->Update(dt);
+		}
 
-	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
-		item->data->Update(dt);
-	}
-
-	if (deleteLines()) {
-		if (!checkFigures()) {
-			LOG("ENDGAME");
+		if (deleteLines()) {
+			if (!checkFigures()) {
+				LOG("ENDGAME");
+			}
 		}
 	}
-
-	
 
 	return true;
 }
@@ -403,19 +406,23 @@ bool j1Scene::PostUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
 		return false;
 
-	//DRAW EVEYTHING
-	uint alpha = 255;
-	for (int row = 0; row < 10; row++) {
-		for (int col = 0; col < 10; col++) {
-			grid.cells[row][col]->Draw();
+	if (scene == scene_type::GAME) {
+		//DRAW EVEYTHING
+		uint alpha = 255;
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
+				grid.cells[row][col]->Draw();
+			}
+		}
+
+		//Create List of Current figures
+		for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+			if (item->data->enable)
+				item->data->PostUpdate();
 		}
 	}
 
-	//Create List of Current figures
-	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
-		if (item->data->enable)
-			item->data->PostUpdate();
-	}
+	App->gui->Draw();
 
 	return ret;
 }

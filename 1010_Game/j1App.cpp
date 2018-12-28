@@ -264,18 +264,7 @@ bool j1App::DoUpdate()
 	item = modules.start;
 	j1Module* pModule = NULL;
 
-	for (item = modules.start; item != NULL && ret == true; item = item->next)	//All logic
-	{
-		pModule = item->data;
-
-		if (pModule->active == false) {
-			continue;
-		}
-
-		//ret = item->data->UpdateTick(dt);	//CHANGE/FIX: Apply change
-	}
-
-	for (item = modules.start; item != NULL && ret == true; item = item->next)	//All graphic
+	for (item = modules.start; item != NULL && ret == true; item = item->next)
 	{
 		pModule = item->data;
 

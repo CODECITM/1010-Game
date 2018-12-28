@@ -17,7 +17,7 @@
 
 j1UserInterface::j1UserInterface() : j1Module()
 {
-	name.create("userInterface");
+	name.create("gui");
 }
 
 // Destructor
@@ -89,7 +89,7 @@ bool j1UserInterface::PreUpdate()
 }
 
 // Called each frame (logic)
-bool j1UserInterface::UpdateTick(float dt)
+bool j1UserInterface::Update(float dt)
 {
 	BROFILER_CATEGORY("Module UserInterface UpdateTick", Profiler::Color::DeepPink);
 	

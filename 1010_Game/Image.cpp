@@ -94,10 +94,10 @@ bool Image::Draw() const
 	bool ret = true;
 
 	if (lookingRight) {
-		ret = App->render->Blit(graphics, (int)position.x, (int)position.y, sprite, SDL_FLIP_NONE, false);
+		ret = App->render->Blit(graphics, (int)position.x, (int)position.y, sprite, SDL_FLIP_NONE);
 	}
 	else {
-		ret = App->render->Blit(graphics, (int)position.x, (int)position.y, sprite, SDL_FLIP_HORIZONTAL, false);
+		ret = App->render->Blit(graphics, (int)position.x, (int)position.y, sprite, SDL_FLIP_HORIZONTAL);
 	}
 
 	return ret;

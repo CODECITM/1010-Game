@@ -33,9 +33,14 @@ bool j1Fonts::Awake(pugi::xml_node& conf)
 		folder.create(conf.child("folder").child_value());
 
 		p2SString path = folder;
-		path += conf.child("default_font").attribute("file").as_string(DEFAULT_FONT);
-		int size = conf.child("default_font").attribute("size").as_int(DEFAULT_FONT_SIZE);
+		path += conf.child("defaultFont").attribute("file").as_string(DEFAULT_FONT);
+		int size = conf.child("defaultFont").attribute("size").as_int(DEFAULT_FONT_SIZE);
 		defaultFont = Load(path.GetString(), size);
+
+		path = folder;
+		path += conf.child("textFont").attribute("file").as_string(DEFAULT_FONT);
+		size = conf.child("textFont").attribute("size").as_int(DEFAULT_FONT_SIZE);
+		textFont = Load(path.GetString(), size);
 	}
 
 	return ret;
