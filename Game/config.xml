@@ -45,7 +45,7 @@
   </audio>
 
    <gui>
-     <atlas file="Assets/gui/Atlas1.6.png"/>
+     <atlas file="gui/atlas.png"/>
      <logo file=""/>
   </gui>
 
