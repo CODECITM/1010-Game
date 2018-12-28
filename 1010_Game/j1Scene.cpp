@@ -202,12 +202,28 @@ bool j1Scene::checkFigures() {
 
 	iPoint cell;
 	float distance = -1.0f;
-
+	Color color;
 	if (figures.count() == 0) {
 		figures.clear();
-		figures.add(new j1Figure({ 0,100 }, RED));
-		figures.add(new j1Figure({ 150,100 }, RED));
-		figures.add(new j1Figure({ 300,100 }, RED));
+
+		float x = 0;
+		for (int i = 0; i < 3; i++) {
+			int r = rand() % 100;
+			//INSERT FIGURES SPAWN
+			if (r < 40)
+				color = RED;
+			else if (r < 60)
+				color = BLUE;
+			else if (r < 70)
+				color = PURPLE;
+			else if (r < 80)
+				color = YELLOW;
+			else if (r < 100)
+				color = GREEN;
+
+			figures.add(new j1Figure({ x,100 },color));
+			x += 150.0;
+		}
 		ret = checkPosibilities();
 	}
 	p2List_item <j1Figure*>* item = figures.start;

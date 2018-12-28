@@ -117,6 +117,9 @@ bool j1Figure::PostUpdate() {
 			case(Color::YELLOW):
 				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 0, alpha);
 				break;
+			case(Color::PURPLE):
+				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 0, 255, alpha);
+				break;
 			}
 		}
 	}
