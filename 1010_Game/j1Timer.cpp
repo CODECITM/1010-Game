@@ -7,25 +7,58 @@
 #include "SDL\include\SDL_timer.h"
 
 // ---------------------------------------------
-j1Timer::j1Timer()
+j1Timer::j1Timer(bool run)
 {
-	Start();
+	if (run)
+		Start();
+	else {
+		running = false;
+		started_at = 0;
+		stopped_at = 0;
+	}
 }
 
 // ---------------------------------------------
 void j1Timer::Start()
 {
 	started_at = SDL_GetTicks();
+	running = true;
+}
+
+float j1Timer::Stop()
+{
+	stopped_at = SDL_GetTicks();
+	running = false;
+	return ReadSec();
+}
+
+void j1Timer::Reset()
+{
+	running = false;
+	started_at = 0;
+	stopped_at = 0;
 }
 
 // ---------------------------------------------
 uint32 j1Timer::Read() const
 {
-	return SDL_GetTicks() - started_at;
+	if (running)
+	{
+		return SDL_GetTicks() - started_at;
+	}
+	else
+	{
+		return stopped_at - started_at;
+	}
 }
 
 // ---------------------------------------------
 float j1Timer::ReadSec() const
 {
-	return float(SDL_GetTicks() - started_at) / 1000.0f;
+	return float (Read()) / 1000.0f;
+}
+
+bool j1Timer::IsRunning()
+{
+	return running;
 }

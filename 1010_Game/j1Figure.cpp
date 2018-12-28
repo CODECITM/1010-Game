@@ -8,8 +8,7 @@
 #include "Figure_Templates.h"
 #include "j1Audio.h"
 #include "j1Scene.h"
-
-
+#include "j1Data.h"
 
 
 j1Figure::j1Figure(fPoint position, Color color) : position(position), color(color){
@@ -120,6 +119,7 @@ void j1Figure::moveFigure()
 			grabOffset = { (float)mousePos.x - position.x, (float)mousePos.y - position.y };
 			setMouseGrabPos = true;
 			App->audio->PlayFx(SFX_PIECE_PICKED);
+			App->data->Picked();
 		}
 	}
 	else if (setMouseGrabPos == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {

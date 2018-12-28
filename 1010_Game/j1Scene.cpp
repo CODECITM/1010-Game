@@ -15,6 +15,7 @@
 #include "Button.h"
 #include "ActionBox.h"
 #include "ButtonActions.h"
+#include "j1Data.h"
 
 j1Scene::j1Scene() : j1Module()
 {
@@ -371,6 +372,7 @@ bool j1Scene::checkFigures() {
 				else {
 					item->data->resetFigure();
 					item->data->check = false;
+					App->data->Returned();
 				}
 			}else
 				item->data->resetFigure();
