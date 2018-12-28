@@ -158,7 +158,7 @@
     </ClInclude>
     <ClInclude Include="j1Data.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
-    </ClCompile>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Programacio 2 ===========">
