@@ -9,15 +9,37 @@
 #include "j1FadeScene.h"
 #include "j1Scene.h"
 #include "j1Window.h"
+#include "j1Fonts.h"
+#include "j1UserInterface.h"
+#include "Image.h"
+#include "Text.h"
+#include "Button.h"
+#include "ActionBox.h"
 
 j1Scene::j1Scene() : j1Module()
 {
 	name.create("scenes");
+
+	button = new SDL_Rect[4];
+	checkButton = new SDL_Rect[3];
+	exit = new SDL_Rect[4];
+	shutDown = new SDL_Rect[4];
+	settings = new SDL_Rect[4];
+	back = new SDL_Rect[4];
+	webpage = new SDL_Rect[4];
 }
 
 // Destructor
 j1Scene::~j1Scene()
-{}
+{
+	RELEASE_ARRAY(button);
+	RELEASE_ARRAY(checkButton);
+	RELEASE_ARRAY(exit);
+	RELEASE_ARRAY(shutDown);
+	RELEASE_ARRAY(settings);
+	RELEASE_ARRAY(back);
+	RELEASE_ARRAY(webpage);
+}
 
 // Called before render is available
 bool j1Scene::Awake(pugi::xml_node& config)
@@ -25,12 +47,43 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	LOG("Loading Scene");
 	bool ret = true;
 
+	scene = (scene_type)config.attribute("start").as_int();
+
+	//UI Data Awake
+	pugi::xml_node item = config.child("ui").child("panel");
+	panel = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("window");
+	window = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	RegisterButtonData(config.child("ui").child("button"), button);
+
+	item = config.child("ui").child("checkButton");
+	checkButton[0] = { item.attribute("x1").as_int(), item.attribute("y1").as_int(), item.attribute("w1").as_int(), item.attribute("h1").as_int() };
+	checkButton[1] = { item.attribute("x2").as_int(), item.attribute("y2").as_int(), item.attribute("w2").as_int(), item.attribute("h2").as_int() };
+	checkButton[2] = { item.attribute("x3").as_int(), item.attribute("y3").as_int(), item.attribute("w3").as_int(), item.attribute("h3").as_int() };
+
+	RegisterButtonData(config.child("ui").child("exit"), exit);
+	RegisterButtonData(config.child("ui").child("shutDown"), shutDown);
+	RegisterButtonData(config.child("ui").child("settings"), settings);
+	RegisterButtonData(config.child("ui").child("back"), back);
+	RegisterButtonData(config.child("ui").child("webpage"), webpage);
+
 	return ret;
+}
+
+void j1Scene::RegisterButtonData(pugi::xml_node& node, SDL_Rect* button)
+{
+	button[0] = { node.attribute("x1").as_int(), node.attribute("y1").as_int(), node.attribute("w1").as_int(), node.attribute("h1").as_int() };
+	button[1] = { node.attribute("x2").as_int(), node.attribute("y2").as_int(), node.attribute("w2").as_int(), node.attribute("h2").as_int() };
+	button[2] = { node.attribute("x3").as_int(), node.attribute("y3").as_int(), node.attribute("w3").as_int(), node.attribute("h3").as_int() };
+	button[3] = { node.attribute("x4").as_int(), node.attribute("y4").as_int(), node.attribute("w4").as_int(), node.attribute("h4").as_int() };
 }
 
 // Called before the first frame
 bool j1Scene::Start()
 {
+	bool ret = true;
 
 	cell_size = 30;
 	cell_offset = 5;
@@ -55,7 +108,40 @@ bool j1Scene::Start()
 	figures.add(new j1Figure({ 150,50 }, GREEN));
 	figures.add(new j1Figure({ 300,50 }, YELLOW));
 
-	return true;
+	//Scene Start
+	switch (scene) {
+	case scene_type::MAIN_MENU:
+		/*UIElement* parent;
+
+		App->gui->CreateText({ 576 / 4, 100 }, "Get Hooked", DEFAULT_COLOR, App->font->titleFont, false);
+		parent = App->gui->CreateActionBox(&StartGame, { 576 / 4, 180 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Start", DEFAULT_COLOR, gameText, false, parent);
+		parent = App->gui->CreateActionBox(&LoadGame, { 576 / 4, 225 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Continue", DEFAULT_COLOR, gameText, false, parent);
+		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 4, 270 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, gameText, false, parent);
+		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 4, 315 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, gameText, false, parent);
+		App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
+		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
+
+		App->audio->PlayMusic(App->audio->musicMainMenu.GetString());*/
+		break;
+	case scene_type::SETTINGS:
+
+		break;
+	case scene_type::CREDITS:
+		
+		break;
+	case scene_type::GAME:
+		
+		break;
+	}
+
+	App->audio->MusicToMixer();
+	App->audio->SfxToMixer();
+
+	return ret;
 }
 
 // Called each loop iteration

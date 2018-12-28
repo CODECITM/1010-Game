@@ -18,6 +18,17 @@ struct Grid {
 	Cell* cells[10][10];
 };
 
+enum class scene_type {
+	NONE = -1,
+	MAIN_MENU,
+	SETTINGS,
+	CREDITS,
+
+	GAME,
+
+	MAX_SCENES
+};
+
 class j1Scene : public j1Module
 {
 public:
@@ -60,6 +71,28 @@ public:
 	bool isValid(iPoint cell, j1Figure* figure, bool fill = true);
 
 private:
+	void RegisterButtonData(pugi::xml_node&, SDL_Rect* button);
+
+public:
+	scene_type scene;
+
+private:
+	//Default UI data list
+	SDL_Rect panel;
+	SDL_Rect window;
+	SDL_Rect sliderBar;
+	SDL_Rect sliderGrab;
+	SDL_Rect* button;
+	SDL_Rect* checkButton;
+
+	//Specific UI Data
+	SDL_Rect* exit;
+	SDL_Rect* shutDown;
+	SDL_Rect* settings;
+	SDL_Rect* back;
+	SDL_Rect* webpage;
+
+	//Game
 	Grid grid;
 	p2List<j1Figure*> figures;
 	p2List<Line> lines;
