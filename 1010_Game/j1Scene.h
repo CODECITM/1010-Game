@@ -7,7 +7,8 @@
 struct SDL_Texture;
 
 struct Line {
-	p2List<int> line;
+	int col;
+	int row;
 	int index = 0;
 };
 

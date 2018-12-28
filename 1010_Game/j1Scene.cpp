@@ -116,8 +116,29 @@ bool j1Scene::Update(float dt)
 }
 
 bool j1Scene::deleteLines() {
+	bool ret = true;
+	for (p2List_item<Line>* item = lines.start; item != nullptr; item = item->next) {
+		int index = item->data.index;
+		int col = item->data.col;
+		int row = item->data.row;
+		if (index < 10) {
+			if (col != -1) {
+				grid.cells[index][col]->active = false;
+				grid.cells[index][col]->color = Color::GREY;
+			}
+			else if (row != -1) {
+				grid.cells[row][index]->active = false;
+				grid.cells[row][index]->color = Color::GREY;
+			}
+			item->data.index++;
+			ret = false;
+		}
+		else {
+			lines.del(item);
+		}
+	}
 
-	return true;
+	return ret;
 }
 
 bool j1Scene::checkPosibilities() {
@@ -150,7 +171,8 @@ void j1Scene::detectLines() {
 				del = false;
 		}
 		if (del) {
-			line.line.add(row);
+			line.col = -1;
+			line.row = row;
 			lines.add(line);
 			LOG("ROW: %i", row);
 		}
@@ -163,7 +185,8 @@ void j1Scene::detectLines() {
 				del = false;
 		}
 		if (del) {
-			line.line.add(col);
+			line.row = -1;
+			line.col = col;
 			lines.add(line);
 			LOG("COL: %i", col);
 		}
@@ -200,7 +223,7 @@ bool j1Scene::checkFigures() {
 					float c_distance = position2.DistanceTo(position1);
 					//if (c_distance < 10) {
 					if (distance == -1.0f || c_distance < distance && c_distance) {
-						LOG("distance:%f", c_distance);
+						//LOG("distance:%f", c_distance);
 						distance = c_distance;
 						cell = iPoint({ row, col });
 					}
