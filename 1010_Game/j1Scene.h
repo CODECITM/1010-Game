@@ -56,6 +56,8 @@ public:
 
 	void detectLines();
 
+	void createFigures();
+
 	// Called before all Updates
 	bool PostUpdate();
 

@@ -16,7 +16,7 @@
     <resolution width="576" height="900" scale="1"/>
     <fullscreen value="false"/>
     <borderless value="false"/>
-    <resizable value="false"/>
+    <resizable value="true"/>
     <fullscreen_window value="false"/>
   </window>
   
@@ -32,19 +32,21 @@
     </music>
     <sfx volume="100">
       <folder>audio/fx/</folder>
+      <brick_destroyed>brick_destroyed.wav</brick_destroyed>
+      <button_hover_start>button_hover_start.wav</button_hover_start>
+      <button_pressed>button_pressed.wav</button_pressed>
+      <piece_dropped>piece_dropped.wav</piece_dropped>
+      <piece_picked>piece_picked.wav</piece_picked>
       <ui>
         <button>Button.wav</button>
       </ui>
-      <entities>
-        
-      </entities>
+      
     </sfx>
   </audio>
 
    <gui>
      <atlas file="Assets/gui/Atlas1.6.png"/>
      <logo file=""/>
-     
   </gui>
 
   <fonts>

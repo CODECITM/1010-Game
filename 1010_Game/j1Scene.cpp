@@ -103,10 +103,7 @@ bool j1Scene::Start()
 		}
 	}
 
-	//FIGURE
-	figures.add(new j1Figure({ 0,50 }, RED));
-	figures.add(new j1Figure({ 150,50 }, GREEN));
-	figures.add(new j1Figure({ 300,50 }, YELLOW));
+	createFigures();
 
 	//Scene Start
 	switch (scene) {
@@ -220,13 +217,13 @@ bool j1Scene::deleteLines() {
 				}
 				item->data.index++;
 				ret = false;
+				App->audio->PlayFx(SFX_BRICK_DESTROYED);
 			}
 			else {
 				lines.del(item);
 			}
 		}
 	}
-
 	return ret;
 }
 
@@ -264,7 +261,6 @@ void j1Scene::detectLines() {
 			line.col = -1;
 			line.row = row;
 			lines.add(line);
-			LOG("ROW: %i", row);
 		}
 	}
 
@@ -278,8 +274,32 @@ void j1Scene::detectLines() {
 			line.row = -1;
 			line.col = col;
 			lines.add(line);
-			LOG("COL: %i", col);
 		}
+	}
+
+
+}
+
+void j1Scene::createFigures() {
+	float x = 80;
+	Color color;
+	for (int i = 0; i < 3; i++) {
+		int r = rand() % 100; //is Working??
+		LOG("%i", r);
+		//INSERT FIGURES SPAWN
+		if (r < 40)
+			color = RED;
+		else if (r < 60)
+			color = BLUE;
+		else if (r < 70)
+			color = PURPLE;
+		else if (r < 80)
+			color = YELLOW;
+		else if (r < 100)
+			color = GREEN;
+
+		figures.add(new j1Figure({ x,100 }, color));
+		x += 155;
 	}
 }
 
@@ -288,12 +308,11 @@ bool j1Scene::checkFigures() {
 
 	iPoint cell;
 	float distance = -1.0f;
-
 	if (figures.count() == 0) {
 		figures.clear();
-		figures.add(new j1Figure({ 0,100 }, RED));
-		figures.add(new j1Figure({ 150,100 }, RED));
-		figures.add(new j1Figure({ 300,100 }, RED));
+
+		createFigures();
+		
 		ret = checkPosibilities();
 	}
 	p2List_item <j1Figure*>* item = figures.start;

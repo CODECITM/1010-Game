@@ -6,6 +6,7 @@
 #include "j1Window.h"
 #include "j1Figure.h"
 #include "Figure_Templates.h"
+#include "j1Audio.h"
 
 
 
@@ -109,13 +110,16 @@ bool j1Figure::PostUpdate() {
 				ret = App->render->DrawQuad(*cells[row][col]->rect, 0, 255, 0, alpha);
 				break;
 			case(Color::GREY):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
+				//ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
 				break;
 			case(Color::RED):
 				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 0, 0, alpha);
 				break;
 			case(Color::YELLOW):
 				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 0, alpha);
+				break;
+			case(Color::PURPLE):
+				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 0, 255, alpha);
 				break;
 			}
 		}
@@ -129,10 +133,10 @@ void j1Figure::moveFigure()
 	if (MouseOnFigure() && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_DOWN) {
 		iPoint mousePos;
 		App->input->GetMousePosition(mousePos.x, mousePos.y);
-
 		if (setMouseGrabPos == false) {
 			grabOffset = { (float)mousePos.x - position.x, (float)mousePos.y - position.y };
 			setMouseGrabPos = true;
+			App->audio->PlayFx(SFX_PIECE_PICKED);
 		}
 	}
 	else if (setMouseGrabPos == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_REPEAT) {
@@ -147,6 +151,8 @@ void j1Figure::moveFigure()
 		moveCells(mouseMov);
 	}
 	else if(App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP){
+		if(setMouseGrabPos)
+			App->audio->PlayFx(SFX_PIECE_DROPPED);
 		setMouseGrabPos = false;
 		check = true;
 	}

@@ -13,7 +13,9 @@ struct Mix_Chunk;
 enum sfx_id_list {	// @Carles: List of SFX id numbers
 	SFX_BUTTON_HOVER = 1,
 	SFX_BUTTON_PRESS,
-
+	SFX_PIECE_DROPPED,
+	SFX_PIECE_PICKED,
+	SFX_BRICK_DESTROYED,
 	SFX_MAX
 };
 
@@ -66,6 +68,9 @@ public:	// @Carles
 
 	sfx_file buttonHoverSfx;
 	sfx_file buttonPressSfx;
+	sfx_file PieceDroppedSfx;
+	sfx_file PiecePickedSfx;
+	sfx_file BrickDestroyedSfx;
 
 	ushort masterVolume;
 	ushort musicVolume;
