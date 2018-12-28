@@ -54,7 +54,7 @@ public:
 
 	bool checkPosibilities();
 
-	void detectLines();
+	bool detectLines();
 
 	void createFigures();
 
@@ -102,7 +102,7 @@ private:
 	int cell_size;
 	int cell_offset;
 	j1PerfTimer del_time;
-
+	bool check = false;
 	p2SString image_string;
 
 
