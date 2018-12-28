@@ -7,6 +7,8 @@
 #include "j1Figure.h"
 #include "Figure_Templates.h"
 #include "j1Audio.h"
+#include "j1Scene.h"
+
 
 
 
@@ -46,7 +48,7 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 			};
 
 			if (!active)
-				c_color = GREY;
+				c_color = COLOR_NONE;
 			else
 				c_color = color;
 
@@ -102,26 +104,7 @@ bool j1Figure::PostUpdate() {
 
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
-			switch (cells[row][col]->color) {
-			case(Color::BLUE):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 0, 0, 255, alpha);
-				break;
-			case(Color::GREEN):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 0, 255, 0, alpha);
-				break;
-			case(Color::GREY):
-				//ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			case(Color::RED):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 0, 0, alpha);
-				break;
-			case(Color::YELLOW):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 0, alpha);
-				break;
-			case(Color::PURPLE):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 0, 255, alpha);
-				break;
-			}
+			cells[row][col]->Draw();
 		}
 	}
 	return ret;
@@ -187,4 +170,12 @@ bool j1Figure::moveCells(fPoint movement) {
 Cell::~Cell()
 {
 	delete rect;
+}
+
+void Cell::Draw()
+{
+	if (color != COLOR_NONE) {
+		SDL_Rect* rect = App->scene->piece_colors.At(color)->data;
+		App->render->Blit(App->scene->texture_bricks, position.x, position.y, rect);
+	}
 }
