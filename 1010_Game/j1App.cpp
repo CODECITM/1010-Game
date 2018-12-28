@@ -489,7 +489,7 @@ void j1App::FramerateLogic()
 		int delayTime = (1000 / fpsCap) - lastFrameMs;
 		if (delayTime > 0) {
 			SDL_Delay((Uint32)delayTime);
-			//LOG("We waited for %u and got back in %f", delayTime, delayTimer.ReadMs());
+			LOG("We waited for %u and got back in %f", delayTime, delayTimer.ReadMs());
 		}
 	}
 }

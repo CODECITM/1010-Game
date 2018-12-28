@@ -3,6 +3,7 @@
 
 #include "j1Module.h"
 #include "j1Figure.h"
+#include "j1PerfTimer.h"
 
 struct SDL_Texture;
 
@@ -63,6 +64,8 @@ private:
 	p2List<j1Figure*> figures;
 	p2List<Line> lines;
 	int cell_size;
+	int cell_offset;
+	j1PerfTimer del_time;
 
 };
 

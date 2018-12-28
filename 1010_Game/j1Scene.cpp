@@ -33,27 +33,27 @@ bool j1Scene::Start()
 {
 
 	cell_size = 30;
-	int offset = 10;
+	cell_offset = 5;
 
-	grid.position = {50,230 };
+	grid.position = {80,230 };
 
 	//GRID
 	for (int row = 0; row < 10; row++) {
 		for (int col = 0; col < 10; col++) {
-			float x = (col + 1) * (cell_size + offset) + grid.position.x;
-			float y = (row + 1) * (cell_size + offset) + grid.position.y;
+			float x = (col + 1) * (CELL_SIZE + OFFSET) + grid.position.x;
+			float y = (row + 1) * (CELL_SIZE + OFFSET) + grid.position.y;
 
 			grid.cells[row][col] = new Cell({ x, y }, 
-				new SDL_Rect({ (int)x, (int)y ,cell_size, cell_size }),
+				new SDL_Rect({ (int)x, (int)y ,CELL_SIZE, CELL_SIZE }),
 				false,
 				Color::GREY);
 		}
 	}
 
 	//FIGURE
-	figures.add(new j1Figure({ 0,50 },RED));
-	figures.add(new j1Figure({ 150,50 }, RED));
-	figures.add(new j1Figure({ 300,50 }, RED));
+	figures.add(new j1Figure({ 0,50 }, RED));
+	figures.add(new j1Figure({ 150,50 }, GREEN));
+	figures.add(new j1Figure({ 300,50 }, YELLOW));
 
 	return true;
 }
@@ -86,7 +86,7 @@ bool j1Scene::Update(float dt)
 				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 0, 0, 255, alpha);
 				break;
 			case(Color::GREEN):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 0, 255, 0, alpha);
 				break;
 			case(Color::GREY):
 				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
@@ -98,7 +98,7 @@ bool j1Scene::Update(float dt)
 				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 0, alpha);
 				break;
 			case(Color::PURPLE):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 0, alpha);
+				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 0, 255, alpha);
 				break;
 			}
 		}
@@ -117,24 +117,27 @@ bool j1Scene::Update(float dt)
 
 bool j1Scene::deleteLines() {
 	bool ret = true;
-	for (p2List_item<Line>* item = lines.start; item != nullptr; item = item->next) {
-		int index = item->data.index;
-		int col = item->data.col;
-		int row = item->data.row;
-		if (index < 10) {
-			if (col != -1) {
-				grid.cells[index][col]->active = false;
-				grid.cells[index][col]->color = Color::GREY;
+	if (del_time.ReadMs() > 30) {
+		del_time.Start();
+		for (p2List_item<Line>* item = lines.start; item != nullptr; item = item->next) {
+			int index = item->data.index;
+			int col = item->data.col;
+			int row = item->data.row;
+			if (index < 10) {
+				if (col != -1) {
+					grid.cells[index][col]->active = false;
+					grid.cells[index][col]->color = Color::GREY;
+				}
+				else if (row != -1) {
+					grid.cells[row][index]->active = false;
+					grid.cells[row][index]->color = Color::GREY;
+				}
+				item->data.index++;
+				ret = false;
 			}
-			else if (row != -1) {
-				grid.cells[row][index]->active = false;
-				grid.cells[row][index]->color = Color::GREY;
+			else {
+				lines.del(item);
 			}
-			item->data.index++;
-			ret = false;
-		}
-		else {
-			lines.del(item);
 		}
 	}
 
@@ -164,6 +167,7 @@ bool j1Scene::checkPosibilities() {
 
 void j1Scene::detectLines() {
 	Line line;
+	del_time.Start();
 	for (int row = 0; row < 10; row++) {
 		bool del = true;
 		for (int col = 0; col < 10; col++) {
@@ -244,7 +248,8 @@ bool j1Scene::checkFigures() {
 					item->data->resetFigure();
 					item->data->check = false;
 				}
-			}
+			}else
+				item->data->resetFigure();
 		}
 		item = item->next;
 	}

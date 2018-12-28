@@ -1,8 +1,6 @@
 #ifndef __j1FIGURE_H__
 #define __j1FIGURE_H__
 
-#include "j1Module.h"
-
 struct SDL_Texture;
 
 enum Color {
@@ -63,7 +61,7 @@ public:
 	bool enable = false;
 
 private:
-	int offset = 10;
+	int offset = 5;
 	int cell_size = 30;
 };
 

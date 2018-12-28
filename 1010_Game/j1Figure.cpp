@@ -17,12 +17,12 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 			float x, y;
 			
 			if(col != 0)
-				x = col * (cell_size + offset) + position.x;
+				x = col * (CELL_SIZE + OFFSET) + position.x;
 			else
 				x = col + position.x;
 
 			if(row != 0)
-				y = row * (cell_size + offset) + position.y;
+				y = row * (CELL_SIZE + OFFSET) + position.y;
 			else
 				y = row + position.y;
 
@@ -31,26 +31,26 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 				active = r_figure[row][col];
 				break;
 			case(Color::BLUE):
-				active = r_figure[row][col];
+				active = b_figure[row][col];
 				break;
 			case(Color::GREEN):
-				active = r_figure[row][col];
+				active = g_figure[row][col];
 				break;
 			case(Color::YELLOW):
-				active = r_figure[row][col];
+				active = y_figure[row][col];
 				break;
 			case(Color::PURPLE):
-				active = r_figure[row][col];
+				active = p_figure[row][col];
 				break;
 			};
 
 			if (!active)
 				c_color = GREY;
 			else
-				c_color = RED;
+				c_color = color;
 
 			cells[row][col] = new Cell({ x,y },
-				new SDL_Rect({ (int)x, (int)y, cell_size, cell_size }),
+				new SDL_Rect({ (int)x, (int)y, CELL_SIZE, CELL_SIZE }),
 				active,
 				c_color);
 		}
@@ -58,8 +58,8 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 
 	rect = new SDL_Rect({ cells[0][0]->rect->x,
 									 cells[0][0]->rect->y,
-									 (cell_size + offset) * 3 - offset,
-									 (cell_size + offset) * 3 - offset });
+									 (CELL_SIZE + OFFSET) * 3 - OFFSET,
+									 (CELL_SIZE + OFFSET) * 3 - OFFSET });
 	Start();
 }
 
@@ -95,18 +95,18 @@ bool j1Figure::Update(float dt) {
 bool j1Figure::PostUpdate() {
 
 	bool ret = true;
-	uint alpha = 200;
+	uint alpha = 255;
 
-	ret = App->render->DrawQuad(*rect, 0, 255, 255, alpha);
+	//ret = App->render->DrawQuad(*rect, 0, 255, 255, alpha);
 
 	for (int row = 0; row < 3; row++) {
 		for (int col = 0; col < 3; col++) {
 			switch (cells[row][col]->color) {
 			case(Color::BLUE):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*cells[row][col]->rect, 0, 0, 255, alpha);
 				break;
 			case(Color::GREEN):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*cells[row][col]->rect, 0, 255, 0, alpha);
 				break;
 			case(Color::GREY):
 				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
@@ -115,7 +115,7 @@ bool j1Figure::PostUpdate() {
 				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 0, 0, alpha);
 				break;
 			case(Color::YELLOW):
-				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 255, alpha);
+				ret = App->render->DrawQuad(*cells[row][col]->rect, 255, 255, 0, alpha);
 				break;
 			}
 		}
