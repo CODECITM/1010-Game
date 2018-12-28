@@ -451,8 +451,11 @@ bool j1App::SavegameNow() const
 
 	while(item != NULL && ret == true)
 	{
-		if(item->data->IsEnabled())
+		if (item->data->IsEnabled()) {
+			ret = item->data->CalculateSave();
 			ret = item->data->Save(root.append_child(item->data->name.GetString()));
+		}
+
 		item = item->next;
 	}
 

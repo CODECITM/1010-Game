@@ -25,10 +25,11 @@ void j1Timer::Start()
 	running = true;
 }
 
-void j1Timer::Stop()
+float j1Timer::Stop()
 {
 	stopped_at = SDL_GetTicks();
 	running = false;
+	return ReadSec();
 }
 
 void j1Timer::Reset()

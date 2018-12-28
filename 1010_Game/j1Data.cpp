@@ -26,11 +26,17 @@ j1Data::j1Data()
 	average_time_to_return = 0.0f;
 	average_time_to_score  = 0.0f;
 
+	average_time_to_place_save  = 0.0f;
+	average_time_to_return_save = 0.0f;
+	average_time_to_score_save  = 0.0f;
+
 	for (int i = 0; i < AVERAGE; i++) 
 	{
 		times_picking_placing[i] = -1.0f;
 		times_picking_returning[i] = -1.0f;
 	}
+
+	b_returned = false;
 
 	//Done
 }
@@ -50,6 +56,7 @@ bool j1Data::Start()
 
 bool j1Data::Update(float dt)
 {
+	b_returned = false;
 
 	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
@@ -73,6 +80,12 @@ bool j1Data::CleanUp()
 	return true;
 }
 
+bool j1Data::CalculateSave()
+{
+	average_time_to_return_save = average_time_to_return/ returned_blocks;
+	return true;
+}
+
 bool j1Data::Save(pugi::xml_node & node) const
 {
 
@@ -88,9 +101,9 @@ bool j1Data::Save(pugi::xml_node & node) const
 	//2nd Step
 	pugi::xml_node second_step = node.append_child("second_step");
 
-	second_step.append_child("average_time_to_place").text().set(average_time_to_place);
-	second_step.append_child("average_time_to_return").text().set(average_time_to_return);
-	second_step.append_child("average_time_to_score").text().set(average_time_to_score);
+	second_step.append_child("average_time_to_place").text().set(average_time_to_place_save);
+	second_step.append_child("average_time_to_return").text().set(average_time_to_return_save);
+	second_step.append_child("average_time_to_score").text().set(average_time_to_score_save);
 
 	second_step.append_child("total_actions").text().set(total_actions);
 	second_step.append_child("total_scoring").text().set(total_scoring);
@@ -104,6 +117,7 @@ bool j1Data::Save(pugi::xml_node & node) const
 
 void j1Data::Scored()
 {
+	total_scoring++;
 }
 
 void j1Data::Picked()
@@ -116,8 +130,21 @@ void j1Data::Picked()
 
 void j1Data::Returned()
 {
+	if (!b_returned) {
+
+		total_actions++;
+		returned_blocks++;
+		average_time_to_return += time_picking_returning.Stop();
+		LOG("%f", time_picking_returning.Stop());
+		//average_time_to_return /= 2;
+		LOG("%f", average_time_to_return);
+		b_returned = true;
+	}
 }
 
 void j1Data::Placed()
 {
+	total_actions++;
+	placed_blocks++;
+
 }

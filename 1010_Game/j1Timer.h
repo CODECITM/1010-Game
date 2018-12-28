@@ -11,7 +11,7 @@ public:
 	j1Timer(bool run = true);
 
 	void Start();
-	void Stop();
+	float Stop();
 	void Reset();
 
 	uint32 Read() const;

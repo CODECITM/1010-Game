@@ -19,6 +19,8 @@ public:
 
 	bool CleanUp();
 
+	bool CalculateSave();
+
 	bool Save(pugi::xml_node & node) const;
 
 	void Scored();
@@ -54,12 +56,16 @@ private:
 	float average_time_to_return;
 	float average_time_to_score;
 
+	float average_time_to_place_save;
+	float average_time_to_return_save;
+	float average_time_to_score_save;
+
 	int total_actions;
 	int total_scoring;
 	int picked_blocks;
 	int returned_blocks;
 	int placed_blocks;
 
-
+	bool b_returned;
 };
 
