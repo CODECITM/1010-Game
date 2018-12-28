@@ -164,14 +164,27 @@ void j1Audio::LoadAllMusic(pugi::xml_node& config) {	// @Carles
 void j1Audio::LoadAllSfx(pugi::xml_node& config) {	// @Carles
 	sfxFolder.create(config.child("sfx").child("folder").child_value());
 
-	buttonHoverSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("buttonHover").child_value());
-	buttonPressSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("buttonPress").child_value());
+	buttonHoverSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("button_pressed").child_value());
+	buttonPressSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("button_hover_start").child_value());
+	PieceDroppedSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("piece_dropped").child_value());
+	PiecePickedSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("piece_picked").child_value());
+	BrickDestroyedSfx.filename.create("%s%s", sfxFolder.GetString(), config.child("sfx").child("brick_destroyed").child_value());
+	
 
 	LoadFx(buttonHoverSfx.filename.GetString());
 	buttonHoverSfx.id = SFX_BUTTON_HOVER;
 
 	LoadFx(buttonPressSfx.filename.GetString());
 	buttonPressSfx.id = SFX_BUTTON_PRESS;
+
+	LoadFx(PieceDroppedSfx.filename.GetString());
+	PieceDroppedSfx.id = SFX_PIECE_DROPPED;
+
+	LoadFx(PiecePickedSfx.filename.GetString());
+	PiecePickedSfx.id = SFX_PIECE_PICKED;
+
+	LoadFx(BrickDestroyedSfx.filename.GetString());
+	BrickDestroyedSfx.id = SFX_BRICK_DESTROYED;
 }
 
 // ------------------------------------------------------------------------
