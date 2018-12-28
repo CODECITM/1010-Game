@@ -150,6 +150,9 @@
     <ClInclude Include="Figure_Templates.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonActions.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images\Buttons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Programacio 2 ===========">

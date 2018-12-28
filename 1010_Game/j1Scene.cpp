@@ -15,6 +15,7 @@
 #include "Text.h"
 #include "Button.h"
 #include "ActionBox.h"
+#include "ButtonActions.h"
 
 j1Scene::j1Scene() : j1Module()
 {
@@ -88,7 +89,7 @@ bool j1Scene::Start()
 	cell_size = 30;
 	cell_offset = 5;
 
-	grid.position = {80,230 };
+	grid.position = { 80,230 };
 
 	//GRID
 	for (int row = 0; row < 10; row++) {
@@ -96,7 +97,7 @@ bool j1Scene::Start()
 			float x = (col + 1) * (CELL_SIZE + OFFSET) + grid.position.x;
 			float y = (row + 1) * (CELL_SIZE + OFFSET) + grid.position.y;
 
-			grid.cells[row][col] = new Cell({ x, y }, 
+			grid.cells[row][col] = new Cell({ x, y },
 				new SDL_Rect({ (int)x, (int)y ,CELL_SIZE, CELL_SIZE }),
 				false,
 				Color::GREY);
@@ -108,21 +109,19 @@ bool j1Scene::Start()
 	//Scene Start
 	switch (scene) {
 	case scene_type::MAIN_MENU:
-		/*UIElement* parent;
+		UIElement* parent;
 
-		App->gui->CreateText({ 576 / 4, 100 }, "Get Hooked", DEFAULT_COLOR, App->font->titleFont, false);
+		/*App->gui->CreateText({ 576 / 4, 100 }, "Get Hooked", DEFAULT_COLOR, App->font->defaultFont, false);
 		parent = App->gui->CreateActionBox(&StartGame, { 576 / 4, 180 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Start", DEFAULT_COLOR, gameText, false, parent);
-		parent = App->gui->CreateActionBox(&LoadGame, { 576 / 4, 225 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Continue", DEFAULT_COLOR, gameText, false, parent);
+		App->gui->CreateText(DEFAULT_POINT, "Continue", DEFAULT_COLOR, App->font->defaultFont, false, parent);
 		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 4, 270 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, gameText, false, parent);
+		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, App->font->defaultFont, false, parent);
 		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 4, 315 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, gameText, false, parent);
+		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, App->font->defaultFont, false, parent);
 		App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
-		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
+		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);*/
 
-		App->audio->PlayMusic(App->audio->musicMainMenu.GetString());*/
+		//App->audio->PlayMusic(App->audio->musicMainMenu.GetString());
 		break;
 	case scene_type::SETTINGS:
 
@@ -131,7 +130,6 @@ bool j1Scene::Start()
 		
 		break;
 	case scene_type::GAME:
-		
 		break;
 	}
 

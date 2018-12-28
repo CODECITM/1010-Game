@@ -45,7 +45,7 @@
   </audio>
 
    <gui>
-     <atlas file="Assets/gui/Atlas1.6.png"/>
+     <atlas file="gui/atlas.png"/>
      <logo file=""/>
   </gui>
 
@@ -89,7 +89,7 @@
       <lightPurple x="60" y="60" r="" g="" b="">lightPurple</lightPurple>
       <pink x="90" y="60" r="" g="" b="">pink</pink>
       <red x="120" y="60" r="" g="" b="">red</red>
-      <gray x="120" y="30" r="" g="" b="">gray</gray>
+      <gray x="150" y="30" r="" g="" b="">gray</gray>
     </pieces>
     <sceneintro>
       <map>Map0.4.tmx</map>Map0.4.tmx
