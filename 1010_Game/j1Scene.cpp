@@ -202,7 +202,7 @@ bool j1Scene::deleteLines() {
 					grid.cells[row][index]->active = false;
 					grid.cells[row][index]->color = Color::GREY;
 				}
-				item->data.index++;
+				item->data.index += 1;
 				ret = false;
 				App->audio->PlayFx(SFX_BRICK_DESTROYED);
 			}
@@ -235,7 +235,8 @@ bool j1Scene::checkPosibilities() {
 	return solution;
 }
 
-void j1Scene::detectLines() {
+bool j1Scene::detectLines() {
+	bool ret = false;
 	Line line;
 	del_time.Start();
 	for (int row = 0; row < 10; row++) {
@@ -248,6 +249,8 @@ void j1Scene::detectLines() {
 			line.col = -1;
 			line.row = row;
 			lines.add(line);
+			ret = true;
+			//ADD POINTS @Eric
 		}
 	}
 
@@ -261,9 +264,11 @@ void j1Scene::detectLines() {
 			line.row = -1;
 			line.col = col;
 			lines.add(line);
+			ret = true;
+			//ADD POINTS @Eric
 		}
 	}
-
+	return ret;
 
 }
 
@@ -312,6 +317,7 @@ bool j1Scene::checkFigures() {
 		
 		ret = checkPosibilities();
 	}
+
 	p2List_item <j1Figure*>* item = figures.start;
 	while(item != nullptr && ret) {
 		if (item->data->check && item->data->enable) {
@@ -340,9 +346,9 @@ bool j1Scene::checkFigures() {
 				fPoint movement = grid.cells[cell.x][cell.y]->position - item->data->cells[1][1]->position;
 				item->data->moveCells(movement);
 				if (isValid(cell, item->data)) {
-					detectLines();
+					bool check = detectLines(); //Check if Game Stops unespectedly
 					figures.del(item);
-					if (figures.count() != 0) {
+					if (figures.count() != 0 && !check) {
 						ret = checkPosibilities();
 					}
 				}

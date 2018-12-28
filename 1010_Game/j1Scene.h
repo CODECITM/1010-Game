@@ -54,7 +54,7 @@ public:
 
 	bool checkPosibilities();
 
-	void detectLines();
+	bool detectLines();
 
 	void createFigures();
 
