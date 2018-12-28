@@ -11,6 +11,7 @@
 #include "j1Scene.h"
 #include "j1App.h"
 #include "j1Fonts.h"
+#include "j1Data.h"
 #include "j1FadeScene.h"
 #include "j1UserInterface.h"
 #include "Brofiler\Brofiler.h"
@@ -34,6 +35,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	gui = new j1UserInterface();
 	//entityManager = new j1EntityManager();
 	//collision = new j1Collision();
+	data = new j1Data();
 	fade = new j1FadeScene();
 
 	// Ordered for awake / Start / Update
@@ -48,6 +50,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	//AddModule(entityManager);
 	//AddModule(collision);
 	AddModule(gui);
+	AddModule(data);
 
 	// Scene and fade right before render
 	AddModule(scene);
