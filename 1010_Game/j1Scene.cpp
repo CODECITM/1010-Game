@@ -61,6 +61,10 @@ bool j1Scene::Start()
 // Called each loop iteration
 bool j1Scene::PreUpdate()
 {
+	/*for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+		if(!item->data->enable)
+			figures.del(item);
+	}*/
 	
 	return true;
 }
@@ -100,9 +104,18 @@ bool j1Scene::Update(float dt)
 		}
 	}
 
-	if (!checkFigures()) {
-		LOG("ENDGAME");
+	if (deleteLines()) {
+		if (!checkFigures()) {
+			LOG("ENDGAME");
+		}
 	}
+
+	
+
+	return true;
+}
+
+bool j1Scene::deleteLines() {
 
 	return true;
 }
@@ -128,6 +141,35 @@ bool j1Scene::checkPosibilities() {
 	return solution;
 }
 
+void j1Scene::detectLines() {
+	Line line;
+	for (int row = 0; row < 10; row++) {
+		bool del = true;
+		for (int col = 0; col < 10; col++) {
+			if (!grid.cells[row][col]->active)
+				del = false;
+		}
+		if (del) {
+			line.line.add(row);
+			lines.add(line);
+			LOG("ROW: %i", row);
+		}
+	}
+
+	for (int col = 0; col < 10; col++) {
+		bool del = true;
+		for (int row = 0; row < 10; row++) {
+			if (!grid.cells[row][col]->active)
+				del = false;
+		}
+		if (del) {
+			line.line.add(col);
+			lines.add(line);
+			LOG("COL: %i", col);
+		}
+	}
+}
+
 bool j1Scene::checkFigures() {
 	bool ret = true;
 
@@ -135,13 +177,14 @@ bool j1Scene::checkFigures() {
 	float distance = -1.0f;
 
 	if (figures.count() == 0) {
+		figures.clear();
 		figures.add(new j1Figure({ 0,100 }, RED));
 		figures.add(new j1Figure({ 150,100 }, RED));
 		figures.add(new j1Figure({ 300,100 }, RED));
 		ret = checkPosibilities();
 	}
-
-	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr && ret; item = item->next) {
+	p2List_item <j1Figure*>* item = figures.start;
+	while(item != nullptr && ret) {
 		if (item->data->check && item->data->enable) {
 			for (int row = 0; row < 10 && ret; row++) {
 				for (int col = 0; col < 10 && ret; col++) {
@@ -168,9 +211,11 @@ bool j1Scene::checkFigures() {
 				fPoint movement = grid.cells[cell.x][cell.y]->position - item->data->cells[1][1]->position;
 				item->data->moveCells(movement);
 				if (isValid(cell, item->data)) {
+					detectLines();
 					figures.del(item);
-					if(figures.count()!=0)
+					if (figures.count() != 0) {
 						ret = checkPosibilities();
+					}
 				}
 				else {
 					item->data->resetFigure();
@@ -178,6 +223,7 @@ bool j1Scene::checkFigures() {
 				}
 			}
 		}
+		item = item->next;
 	}
 	return ret;
 }

@@ -6,6 +6,10 @@
 
 struct SDL_Texture;
 
+struct Line {
+	p2List<int> line;
+	int index = 0;
+};
 
 struct Grid {
 	iPoint position;
@@ -33,7 +37,11 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
+	bool deleteLines();
+
 	bool checkPosibilities();
+
+	void detectLines();
 
 	// Called before all Updates
 	bool PostUpdate();
@@ -52,6 +60,7 @@ public:
 private:
 	Grid grid;
 	p2List<j1Figure*> figures;
+	p2List<Line> lines;
 	int cell_size;
 
 };
