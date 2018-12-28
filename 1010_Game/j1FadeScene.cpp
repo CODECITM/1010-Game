@@ -36,14 +36,15 @@ bool j1FadeScene::Start()
 	return true;
 }
 
-// Update: draw background
-bool j1FadeScene::Update()
+bool j1FadeScene::PostUpdate()
 {
+	bool ret = true;
+
 	if (step == fade_step::NONE)
 		return true;
 
 	Uint32 now = SDL_GetTicks() - start_time;
-	float normalized = MIN(1.0f, (float)now / (float)total_time);
+	normalized = MIN(1.0f, (float)now / (float)total_time);
 
 	switch (step)
 	{
@@ -73,7 +74,7 @@ bool j1FadeScene::Update()
 	SDL_SetRenderDrawColor(App->render->renderer, 0, 0, 0, (Uint8)(normalized * 255.0f));
 	SDL_RenderFillRect(App->render->renderer, &screen);
 
-	return true;
+	return ret;
 }
 
 // Fade to black. At mid point change one scene for another

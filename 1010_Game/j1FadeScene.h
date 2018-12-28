@@ -38,8 +38,8 @@ public:
 	// Called before the first frame
 	bool Start();
 
-	// Called each loop iteration (graphic)
-	bool Update();
+	// Called each loop iteration
+	bool PostUpdate();
 
 	bool FadeToBlack(float time = 2.0f, fade_type = fade_type::NONE);
 
@@ -50,6 +50,7 @@ public:
 	float GetDelay() const;
 
 private:
+	float normalized;
 	float delay;
 	fade_step step = fade_step::NONE;
 	fade_type type;

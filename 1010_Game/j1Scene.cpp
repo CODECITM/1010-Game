@@ -8,7 +8,6 @@
 #include "j1Window.h"
 #include "j1FadeScene.h"
 #include "j1Scene.h"
-#include "j1Window.h"
 #include "j1Fonts.h"
 #include "j1UserInterface.h"
 #include "Image.h"
@@ -51,7 +50,10 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	scene = (scene_type)config.attribute("start").as_int();
 
 	//UI Data Awake
-	pugi::xml_node item = config.child("ui").child("panel");
+	pugi::xml_node item = config.child("ui").child("title");
+	title = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("panel");
 	panel = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
 
 	item = config.child("ui").child("window");
@@ -96,43 +98,24 @@ void j1Scene::RegisterButtonData(pugi::xml_node& node, SDL_Rect* button)
 bool j1Scene::Start()
 {
 	bool ret = true;
-	_TTF_Font* text = App->font->textFont;
 
-	texture_bricks = App->tex->Load(image_string.GetString());
-
-	cell_size = 30;
-	cell_offset = 5;
-
-	grid.position = { 80,230 };
-
-	//GRID
-	for (int row = 0; row < 10; row++) {
-		for (int col = 0; col < 10; col++) {
-			float x = (col + 1) * (CELL_SIZE + OFFSET) + grid.position.x;
-			float y = (row + 1) * (CELL_SIZE + OFFSET) + grid.position.y;
-
-			grid.cells[row][col] = new Cell({ x, y },
-				new SDL_Rect({ (int)x, (int)y ,CELL_SIZE, CELL_SIZE }),
-				false,
-				Color::GREY);
-		}
-	}
-
-	createFigures();
+	UIElement* parent;
+	_TTF_Font* titleFont = App->font->titleFont;
+	_TTF_Font* textFont = App->font->textFont;
+	iPoint screenSize;
+	App->win->GetWindowSize((uint&)screenSize.x, (uint&)screenSize.y);
 
 	//Scene Start
 	switch (scene) {
 	case scene_type::MAIN_MENU:
-		UIElement* parent;
-		
 
-		App->gui->CreateText({ 576 / 2, 100 }, "Get Hooked", DEFAULT_COLOR, App->font->defaultFont, false);
-		parent = App->gui->CreateActionBox(&CloseGame, { 576 / 2, 180 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Continue", DEFAULT_COLOR, text, false, parent);
-		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 2, 350 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, text, false, parent);
-		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 500 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, text, false, parent);
+		App->gui->CreateImage({ 576 / 2, 180 }, title, NULL, false);
+		parent = App->gui->CreateActionBox(&StartGame, { 576 / 2, 350 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Start", DEFAULT_COLOR, textFont, false, parent);
+		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 2, 500 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, textFont, false, parent);
+		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 650 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, textFont, false, parent);
 		App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
 		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
 
@@ -140,12 +123,38 @@ bool j1Scene::Start()
 		break;
 	case scene_type::SETTINGS:
 
+		parent = App->gui->CreateActionBox(&GoToMenu, { 576 / 2, 500 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "pop", DEFAULT_COLOR, textFont, false, parent);
+
 		break;
 	case scene_type::CREDITS:
 		
+		parent = App->gui->CreateActionBox(&GoToMenu, { 576 / 2, 500 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "pop", DEFAULT_COLOR, textFont, false, parent);
+
 		break;
 	case scene_type::GAME:
-		
+		texture_bricks = App->tex->Load(image_string.GetString());
+
+		cell_size = 30;
+		cell_offset = 5;
+
+		grid.position = { 80,230 };
+
+		//GRID
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
+				float x = (col + 1) * (CELL_SIZE + OFFSET) + grid.position.x;
+				float y = (row + 1) * (CELL_SIZE + OFFSET) + grid.position.y;
+
+				grid.cells[row][col] = new Cell({ x, y },
+					new SDL_Rect({ (int)x, (int)y ,CELL_SIZE, CELL_SIZE }),
+					false,
+					Color::GREY);
+			}
+		}
+
+		createFigures();
 		break;
 	}
 
@@ -418,6 +427,37 @@ bool j1Scene::PostUpdate()
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
 		return false;
 
+	if (App->fade->GetStep() == fade_step::FULLY_FADED) {	// When game is fully faded, start game load and disable all entities for the next frame, then enable them.
+		App->gui->active = false;
+
+		switch (App->fade->GetType()) {	//CHANGE/FIX: This should be a function
+		case fade_type::MAIN_MENU:
+
+			ChangeScene(scene_type::MAIN_MENU);
+			break;
+		case fade_type::SETTINGS:
+
+			ChangeScene(scene_type::SETTINGS);
+			break;
+		case fade_type::CREDITS:
+
+			ChangeScene(scene_type::CREDITS);
+			break;
+		case fade_type::START_GAME:
+
+			ChangeScene(scene_type::GAME);
+			break;
+		case fade_type::RESTART:
+
+			App->gui->CleanUp();
+			break;
+		}
+	}
+	else if (App->gui->active == false && App->fade->GetStep() == fade_step::NONE) {	//CHANGE/FIX: Avoids bugs, but could be improved
+		App->fade->ResetType();
+		App->gui->active = true;
+	}
+	
 	if (scene == scene_type::GAME) {
 		//DRAW EVEYTHING
 		uint alpha = 255;
@@ -432,6 +472,11 @@ bool j1Scene::PostUpdate()
 			if (item->data->enable)
 				item->data->PostUpdate();
 		}
+	}
+	else {
+		SDL_Rect screen = { 0, 0, 0, 0 };
+		App->win->GetWindowSize((uint&)screen.w, (uint&)screen.h);
+		App->render->DrawQuad(screen, 255, 255, 255);
 	}
 
 	App->gui->Draw();
@@ -468,4 +513,13 @@ bool j1Scene::Save(pugi::xml_node& data) const
 {
 
 	return true;
+}
+
+void j1Scene::ChangeScene(scene_type scene)
+{
+	this->scene = scene;
+
+	App->gui->CleanUp();
+	CleanUp();
+	Start();
 }

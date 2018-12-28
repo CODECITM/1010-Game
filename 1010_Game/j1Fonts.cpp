@@ -38,6 +38,11 @@ bool j1Fonts::Awake(pugi::xml_node& conf)
 		defaultFont = Load(path.GetString(), size);
 
 		path = folder;
+		path += conf.child("titleFont").attribute("file").as_string(DEFAULT_FONT);
+		size = conf.child("titleFont").attribute("size").as_int(DEFAULT_FONT_SIZE);
+		titleFont = Load(path.GetString(), size);
+
+		path = folder;
 		path += conf.child("textFont").attribute("file").as_string(DEFAULT_FONT);
 		size = conf.child("textFont").attribute("size").as_int(DEFAULT_FONT_SIZE);
 		textFont = Load(path.GetString(), size);
