@@ -205,6 +205,7 @@ bool j1Scene::deleteLines() {
 				App->audio->PlayFx(SFX_BRICK_DESTROYED);
 			}
 			else {
+				check = true;
 				lines.del(item);
 			}
 		}
@@ -313,8 +314,13 @@ bool j1Scene::checkFigures() {
 
 		createFigures();
 		
-		ret = checkPosibilities();
+		check = true;
 	}
+
+	if (check) //Check Possible Moves
+		ret = checkPosibilities(),
+		check = false;
+
 
 	p2List_item <j1Figure*>* item = figures.start;
 	while(item != nullptr && ret) {
@@ -344,9 +350,9 @@ bool j1Scene::checkFigures() {
 				fPoint movement = grid.cells[cell.x][cell.y]->position - item->data->cells[1][1]->position;
 				item->data->moveCells(movement);
 				if (isValid(cell, item->data)) {
-					bool check = detectLines(); //Check if Game Stops unespectedly
+					detectLines(); //Check if Game Stops unespectedly
 					figures.del(item);
-					if (figures.count() != 0 && !check) {
+					if (figures.count() != 0) {
 						ret = checkPosibilities();
 					}
 				}
