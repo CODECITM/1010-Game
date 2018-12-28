@@ -69,6 +69,17 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	RegisterButtonData(config.child("ui").child("back"), back);
 	RegisterButtonData(config.child("ui").child("webpage"), webpage);
 
+
+	item = config.child("pieces");
+	image_string.create(item.attribute("file").as_string());
+
+	piece_colors.add(new SDL_Rect({ item.child("gray").attribute("x").as_int(),item.child("gray").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("red").attribute("x").as_int(),item.child("red").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("green").attribute("x").as_int(),item.child("green").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("yellow").attribute("x").as_int(),item.child("yellow").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("blue").attribute("x").as_int(),item.child("blue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("purple").attribute("x").as_int(),item.child("purple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+
 	return ret;
 }
 
@@ -84,6 +95,8 @@ void j1Scene::RegisterButtonData(pugi::xml_node& node, SDL_Rect* button)
 bool j1Scene::Start()
 {
 	bool ret = true;
+
+	texture_bricks = App->tex->Load(image_string.GetString());
 
 	cell_size = 30;
 	cell_offset = 5;
@@ -159,32 +172,6 @@ bool j1Scene::Update(float dt)
 
 	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
 		item->data->Update(dt);
-	}
-	
-	uint alpha = 255;
-	for (int row = 0; row < 10; row++) {
-		for (int col = 0; col < 10; col++) {
-			switch (grid.cells[row][col]->color) {
-			case(Color::BLUE):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 0, 0, 255, alpha);
-				break;
-			case(Color::GREEN):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 0, 255, 0, alpha);
-				break;
-			case(Color::GREY):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 255, alpha);
-				break;
-			case(Color::RED):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 0, 0, alpha);
-				break;
-			case(Color::YELLOW):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 255, 0, alpha);
-				break;
-			case(Color::PURPLE):
-				ret = App->render->DrawQuad(*grid.cells[row][col]->rect, 255, 0, 255, alpha);
-				break;
-			}
-		}
 	}
 
 	if (deleteLines()) {
@@ -287,6 +274,16 @@ void j1Scene::createFigures() {
 		int r = rand() % 100; //is Working??
 		LOG("%i", r);
 		//INSERT FIGURES SPAWN
+		if (r < 50) { //EASY
+
+		}else if (r < 80) { //MEDIUM
+
+		}
+		else if (r < 100) { //HARD
+		
+		} 
+
+
 		if (r < 40)
 			color = RED;
 		else if (r < 60)
@@ -407,6 +404,14 @@ bool j1Scene::PostUpdate()
 
 	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
 		return false;
+
+	//DRAW EVEYTHING
+	uint alpha = 255;
+	for (int row = 0; row < 10; row++) {
+		for (int col = 0; col < 10; col++) {
+			grid.cells[row][col]->Draw();
+		}
+	}
 
 	//Create List of Current figures
 	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {

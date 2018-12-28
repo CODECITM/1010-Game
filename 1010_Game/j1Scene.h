@@ -77,7 +77,8 @@ private:
 
 public:
 	scene_type scene;
-
+	SDL_Texture* texture_bricks;
+	p2List<SDL_Rect*> piece_colors;
 private:
 	//Default UI data list
 	SDL_Rect panel;
@@ -101,6 +102,9 @@ private:
 	int cell_size;
 	int cell_offset;
 	j1PerfTimer del_time;
+
+	p2SString image_string;
+
 
 };
 

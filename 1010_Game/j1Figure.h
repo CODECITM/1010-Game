@@ -4,7 +4,8 @@
 struct SDL_Texture;
 
 enum Color {
-	GREY = -1,
+	COLOR_NONE = -1,
+	GREY,
 	RED,
 	GREEN,
 	YELLOW,
@@ -20,6 +21,8 @@ struct Cell {
 		rect(rect)
 	{}
 	~Cell();
+
+	void Draw();
 
 	fPoint position;
 	bool active;
