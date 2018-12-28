@@ -33,6 +33,8 @@ public:
 	// Called each loop iteration
 	bool Update(float dt);
 
+	bool checkPosibilities();
+
 	// Called before all Updates
 	bool PostUpdate();
 
@@ -43,9 +45,9 @@ public:
 
 	bool Save(pugi::xml_node & data) const;
 
-	void checkFigures();
+	bool checkFigures();
 
-	bool isValid(iPoint cell, j1Figure* figure);
+	bool isValid(iPoint cell, j1Figure* figure, bool fill = true);
 
 private:
 	Grid grid;

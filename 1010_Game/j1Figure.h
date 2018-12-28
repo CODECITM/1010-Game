@@ -10,7 +10,8 @@ enum Color {
 	RED,
 	GREEN,
 	YELLOW,
-	BLUE
+	BLUE, 
+	PURPLE
 };
 
 struct Cell {

@@ -27,11 +27,20 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 				y = row + position.y;
 
 			switch (color) {
-			case(RED):
+			case(Color::RED):
 				active = r_figure[row][col];
-				LOG("");
 				break;
-			case(BLUE):
+			case(Color::BLUE):
+				active = r_figure[row][col];
+				break;
+			case(Color::GREEN):
+				active = r_figure[row][col];
+				break;
+			case(Color::YELLOW):
+				active = r_figure[row][col];
+				break;
+			case(Color::PURPLE):
+				active = r_figure[row][col];
 				break;
 			};
 
@@ -51,6 +60,7 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 									 cells[0][0]->rect->y,
 									 (cell_size + offset) * 3 - offset,
 									 (cell_size + offset) * 3 - offset });
+	Start();
 }
 
 
