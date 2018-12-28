@@ -49,9 +49,6 @@ private:
 	j1Timer time_picking_returning;
 	j1Timer time_to_score;
 
-	float times_picking_placing[AVERAGE];
-	float times_picking_returning[AVERAGE];
-
 	float average_time_to_place;
 	float average_time_to_return;
 	float average_time_to_score;

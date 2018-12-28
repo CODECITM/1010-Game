@@ -30,12 +30,6 @@ j1Data::j1Data()
 	average_time_to_return_save = 0.0f;
 	average_time_to_score_save  = 0.0f;
 
-	for (int i = 0; i < AVERAGE; i++) 
-	{
-		times_picking_placing[i] = -1.0f;
-		times_picking_returning[i] = -1.0f;
-	}
-
 	b_returned = false;
 
 	//Done
@@ -80,11 +74,6 @@ bool j1Data::CleanUp()
 	return true;
 }
 
-bool j1Data::CalculateSave()
-{
-	average_time_to_return_save = average_time_to_return/ returned_blocks;
-	return true;
-}
 
 bool j1Data::Save(pugi::xml_node & node) const
 {
@@ -135,9 +124,7 @@ void j1Data::Returned()
 		total_actions++;
 		returned_blocks++;
 		average_time_to_return += time_picking_returning.Stop();
-		LOG("%f", time_picking_returning.Stop());
-		//average_time_to_return /= 2;
-		LOG("%f", average_time_to_return);
+		average_time_to_return_save = average_time_to_return / returned_blocks;
 		b_returned = true;
 	}
 }

@@ -91,10 +91,6 @@ public:
 		return true;
 	}
 
-	virtual bool CalculateSave()
-	{
-		return true;
-	}
 
 	virtual void OnCollision(Collider*, Collider*) {}
 	virtual void setGround(bool onGround,bool isFalling) {}
