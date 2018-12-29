@@ -231,6 +231,20 @@ UIElement* j1UserInterface::CreateText(fPoint center, const char* content, SDL_C
 	return (UIElement*)ret;
 }
 
+UIElement* j1UserInterface::CreateButton(void(*action)(void), fPoint center, SDL_Rect sprite, SDL_Texture* tex, bool dynamic, UIElement* parent, p2List<UIElement*>* children)
+{
+	UIElement* ret = nullptr;
+
+	if (tex == NULL) {
+		tex = GetAtlas();
+	}
+
+	ret = new Button<void>(action, ui_type::BUTTON_ACTION, center, sprite, tex, dynamic, parent, children);
+	AddElement(ret);
+
+	return ret;
+}
+
 UIElement* j1UserInterface::CreateActionBox(void(*action)(void), fPoint center, SDL_Rect spriteList[4], SDL_Texture* tex, bool dynamic, UIElement* parent, p2List<UIElement*>* children)
 {
 	UIElement* ret = nullptr;

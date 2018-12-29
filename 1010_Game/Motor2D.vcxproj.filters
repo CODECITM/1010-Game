@@ -64,6 +64,9 @@
     <ClCompile Include="j1Data.cpp">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClCompile>
+    <ClCompile Include="Slider.cpp">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -158,6 +161,9 @@
     </ClInclude>
     <ClInclude Include="j1Data.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Slider.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

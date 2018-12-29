@@ -64,7 +64,7 @@ public:	// @Carles
 	int SfxToMixer() const;
 
 public:	// @Carles
-	//p2SString musicMainMenu;
+	p2SString musicMainMenu;
 
 	sfx_file buttonHoverSfx;
 	sfx_file buttonPressSfx;

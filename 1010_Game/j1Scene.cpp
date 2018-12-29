@@ -22,24 +22,24 @@ j1Scene::j1Scene() : j1Module()
 	name.create("scenes");
 
 	button = new SDL_Rect[4];
-	checkButton = new SDL_Rect[3];
+	/*checkButton = new SDL_Rect[3];
 	exit = new SDL_Rect[4];
 	shutDown = new SDL_Rect[4];
 	settings = new SDL_Rect[4];
 	back = new SDL_Rect[4];
-	webpage = new SDL_Rect[4];
+	webpage = new SDL_Rect[4];*/
 }
 
 // Destructor
 j1Scene::~j1Scene()
 {
 	RELEASE_ARRAY(button);
-	RELEASE_ARRAY(checkButton);
+	/*RELEASE_ARRAY(checkButton);
 	RELEASE_ARRAY(exit);
 	RELEASE_ARRAY(shutDown);
 	RELEASE_ARRAY(settings);
 	RELEASE_ARRAY(back);
-	RELEASE_ARRAY(webpage);
+	RELEASE_ARRAY(webpage);*/
 }
 
 // Called before render is available
@@ -54,15 +54,33 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	pugi::xml_node item = config.child("ui").child("title");
 	title = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
 
-	item = config.child("ui").child("panel");
-	panel = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+	item = config.child("ui").child("webpage");
+	webpage = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("panels").child("normal");
+	panelNormal = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("panels").child("short");
+	panelShort = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("panels").child("long");
+	panelLong = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("panels").child("square");
+	panelSquare = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
 
 	item = config.child("ui").child("window");
 	window = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
 
+	item = config.child("ui").child("leftArrow");
+	leftArrow = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
+	item = config.child("ui").child("rightArrow");
+	rightArrow = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
+
 	RegisterButtonData(config.child("ui").child("button"), button);
 
-	item = config.child("ui").child("checkButton");
+	/*item = config.child("ui").child("checkButton");
 	checkButton[0] = { item.attribute("x1").as_int(), item.attribute("y1").as_int(), item.attribute("w1").as_int(), item.attribute("h1").as_int() };
 	checkButton[1] = { item.attribute("x2").as_int(), item.attribute("y2").as_int(), item.attribute("w2").as_int(), item.attribute("h2").as_int() };
 	checkButton[2] = { item.attribute("x3").as_int(), item.attribute("y3").as_int(), item.attribute("w3").as_int(), item.attribute("h3").as_int() };
@@ -71,19 +89,28 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	RegisterButtonData(config.child("ui").child("shutDown"), shutDown);
 	RegisterButtonData(config.child("ui").child("settings"), settings);
 	RegisterButtonData(config.child("ui").child("back"), back);
-	RegisterButtonData(config.child("ui").child("webpage"), webpage);
+	RegisterButtonData(config.child("ui").child("webpage"), webpage);*/
 
 
 	item = config.child("pieces");
 	image_string.create(item.attribute("file").as_string());
 
 	piece_colors.add(new SDL_Rect({ item.child("gray").attribute("x").as_int(),item.child("gray").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
-	piece_colors.add(new SDL_Rect({ item.child("red").attribute("x").as_int(),item.child("red").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
-	piece_colors.add(new SDL_Rect({ item.child("green").attribute("x").as_int(),item.child("green").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("lightRed").attribute("x").as_int(),item.child("lightRed").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("orange").attribute("x").as_int(),item.child("orange").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	piece_colors.add(new SDL_Rect({ item.child("yellow").attribute("x").as_int(),item.child("yellow").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("lightGreen").attribute("x").as_int(),item.child("lightGreen").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("green").attribute("x").as_int(),item.child("green").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("greenBlue").attribute("x").as_int(),item.child("greenBlue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("cyan").attribute("x").as_int(),item.child("cyan").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("lightBlue").attribute("x").as_int(),item.child("lightBlue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	piece_colors.add(new SDL_Rect({ item.child("blue").attribute("x").as_int(),item.child("blue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("darkBlue").attribute("x").as_int(),item.child("darkBlue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("darkPurple").attribute("x").as_int(),item.child("darkPurple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	piece_colors.add(new SDL_Rect({ item.child("purple").attribute("x").as_int(),item.child("purple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
-
+	piece_colors.add(new SDL_Rect({ item.child("lightPurple").attribute("x").as_int(),item.child("lightPurple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("pink").attribute("x").as_int(),item.child("pink").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("red").attribute("x").as_int(),item.child("red").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	return ret;
 }
 
@@ -109,32 +136,42 @@ bool j1Scene::Start()
 	//Scene Start
 	switch (scene) {
 	case scene_type::MAIN_MENU:
-
 		App->gui->CreateImage({ 576 / 2, 180 }, title, NULL, false);
 		parent = App->gui->CreateActionBox(&StartGame, { 576 / 2, 350 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Start", DEFAULT_COLOR, textFont, false, parent);
+		App->gui->CreateText(DEFAULT_POINT, "Start", WHITE_FONT, textFont, false, parent);
 		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 2, 500 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Settings", DEFAULT_COLOR, textFont, false, parent);
+		App->gui->CreateText(DEFAULT_POINT, "Settings", WHITE_FONT, textFont, false, parent);
 		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 650 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Credits", DEFAULT_COLOR, textFont, false, parent);
-		App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
-		App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
-
-		//App->audio->PlayMusic(App->audio->musicMainMenu.GetString());
+		App->gui->CreateText(DEFAULT_POINT, "Credits", WHITE_FONT, textFont, false, parent);
+		//App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
+		//App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
 		break;
 	case scene_type::SETTINGS:
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, 129 / 2 + 30 }, leftArrow, NULL, false);
 
-		parent = App->gui->CreateActionBox(&GoToMenu, { 576 / 2, 500 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "pop", DEFAULT_COLOR, textFont, false, parent);
-
+		//App->gui->CreateImage({ 576 / 2, 180 }, title, NULL, false);
+		parent = App->gui->CreateActionBox(&StartGame, { 576 / 2, 350 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Start", WHITE_FONT, textFont, false, parent);
+		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 2, 500 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Settings", WHITE_FONT, textFont, false, parent);
+		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 650 }, button, NULL, false);
+		App->gui->CreateText(DEFAULT_POINT, "Credits", WHITE_FONT, textFont, false, parent);
 		break;
 	case scene_type::CREDITS:
-		
-		parent = App->gui->CreateActionBox(&GoToMenu, { 576 / 2, 500 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "pop", DEFAULT_COLOR, textFont, false, parent);
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, 129 / 2 + 30 }, leftArrow, NULL, false);
 
+		App->gui->CreateImage({ 576 / 2, 440 }, window, NULL, false);
+		App->gui->CreateText({ 576 / 2, 400 }, "Made by <CODE>", BLACK_FONT, titleFont, false);
+		App->gui->CreateText({ 576 / 2, 440 }, "from the UPC - CITM", BLACK_FONT, titleFont, false);
+		App->gui->CreateText({ 576 / 2, 480 }, "under the MIT License", BLACK_FONT, titleFont, false);
+
+		App->gui->CreateButton(&OpenWebpage, { 576 - 123 / 2 - 30, 123 / 2 + 30 }, webpage, NULL, false);
 		break;
 	case scene_type::GAME:
+		//UI
+
+
+		//Initialize Game
 		texture_bricks = App->tex->Load(image_string.GetString());
 
 		cell_size = 30;
@@ -156,6 +193,9 @@ bool j1Scene::Start()
 		}
 
 		createFigures();
+
+		//Music
+		App->audio->PlayMusic(App->audio->musicMainMenu.GetString());
 		break;
 	}
 
@@ -191,6 +231,11 @@ bool j1Scene::Update(float dt)
 				LOG("ENDGAME");
 			}
 		}
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		figures.add(new j1Figure({ 80,100 }, PURPLE));
 	}
 
 	return true;
@@ -271,6 +316,17 @@ bool j1Scene::CleanUp()
 				RELEASE(grid.cells[i][j]);
 			}
 		}
+
+		for (p2List_item <SDL_Rect*>* item = piece_colors.start; item != nullptr; item = item->next) {
+			RELEASE(item->data);
+		}
+		piece_colors.clear();
+
+		App->tex->UnLoad(texture_bricks);
+		texture_bricks = nullptr;
+
+		image_string.Clear();
+
 	}
 
 	return true;
@@ -368,28 +424,47 @@ void j1Scene::createFigures() {
 	float x = 80;
 	Color color;
 	for (int i = 0; i < 3; i++) {
-		int r = rand() % 100; //is Working??
+		int r = rand() % 100; //is Working?? //SDL_GetTicks() % 100 => more random
 		//INSERT FIGURES SPAWN
-		if (r < 50) { //EASY
-
+		if (r < 40) { //EASY
+			r = rand() % 5;
+			if (r < 1)
+				color = ORANGE;
+			else if (r < 2)
+				color = YELLOW;
+			else if (r < 3)
+				color = LIGHT_GREEN;
+			else if (r < 4)
+				color = GREEN;
+			else if (r < 5)
+				color = DARK_PURPLE;
 		}else if (r < 80) { //MEDIUM
-
+			r = rand() % 5;
+			if (r < 1)
+				color = GREEN_BLUE;
+			else if (r < 2)
+				color = BLUE;
+			else if (r < 3)
+				color = PINK;
+			else if (r < 4)
+				color = RED;
+			else if (r < 5)
+			color = LIGHT_PURPLE;
+			
 		}
-		else if (r < 100) { //HARD
-		
-		} 
-
-
-		if (r < 40)
-			color = RED;
-		else if (r < 60)
-			color = BLUE;
-		else if (r < 70)
-			color = PURPLE;
-		else if (r < 80)
-			color = YELLOW;
-		else if (r < 100)
-			color = GREEN;
+		else if (r < 100) { //RARE
+			r = rand() % 5;
+			if (r < 1)
+				color = PURPLE;
+			else if (r < 2)
+				color = DARK_BLUE;
+			else if (r < 3)
+				color = LIGHT_BLUE;
+			else if (r < 4)
+				color = LIGHT_RED;
+			else if (r < 5)
+				color = CYAN;
+		}
 
 		figures.add(new j1Figure({ x,100 }, color));
 		x += 155;
@@ -442,7 +517,9 @@ bool j1Scene::checkFigures() {
 				fPoint movement = grid.cells[cell.x][cell.y]->position - item->data->cells[1][1]->position;
 				item->data->moveCells(movement);
 				if (isValid(cell, item->data)) {
-					detectLines(); //Check if Game Stops unespectedly
+					App->data->Placed();
+					if (detectLines()) //Check if Game Stops unespectedly
+						App->data->Scored(); 
 					figures.del(item);
 					check = true;
 				}
@@ -451,8 +528,11 @@ bool j1Scene::checkFigures() {
 					item->data->check = false;
 					App->data->Returned();
 				}
-			}else
+			}
+			else {
 				item->data->resetFigure();
+				App->data->Returned();
+			}
 		}
 		item = item->next;
 	}
@@ -516,6 +596,5 @@ void j1Scene::ChangeScene(scene_type scene)
 	CleanUp();
 
 	this->scene = scene;
-
 	Start();
 }

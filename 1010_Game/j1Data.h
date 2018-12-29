@@ -2,9 +2,11 @@
 
 #include "j1Module.h"
 #include "j1Timer.h"
+#include "p2List.h"
+#include "p2Point.h"
 
 #define AVERAGE 5
-#define AUTOSAVETIME 5.0f
+#define AUTOSAVETIME 2.0f
 
 class j1Data :	public j1Module
 {
@@ -19,8 +21,6 @@ public:
 
 	bool CleanUp();
 
-	bool CalculateSave();
-
 	bool Save(pugi::xml_node & node) const;
 
 	void Scored();
@@ -30,6 +30,8 @@ public:
 	void Returned();
 
 	void Placed();
+
+	void StartGame();
 
 
 public:
@@ -56,6 +58,13 @@ private:
 	float average_time_to_place_save;
 	float average_time_to_return_save;
 	float average_time_to_score_save;
+
+	//x stands for number of placed at that moment
+	//y stands for average time at that moment
+	p2List<fPoint> average_list_place;
+	p2List<fPoint> average_list_return;
+	p2List<fPoint> average_list_score;
+
 
 	int total_actions;
 	int total_scoring;

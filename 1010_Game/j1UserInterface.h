@@ -54,6 +54,7 @@ public:
 	UIElement* CreateImage(fPoint center, SDL_Rect texRect = { 0, 0, 0, 0 }, SDL_Texture* tex = NULL, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 	UIElement* CreateText(fPoint center, const char* content, SDL_Color color = { 255, 255, 255, 255 }, _TTF_Font* font = NULL, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 
+	UIElement* CreateButton(void(*action)(void), fPoint center, SDL_Rect sprite, SDL_Texture* tex, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 	UIElement* CreateActionBox(void(*action)(void), fPoint center, SDL_Rect spriteList[4], SDL_Texture* tex, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 	//UIElement* CreateCheckBox();
 	//UIElement* CreateInputText();

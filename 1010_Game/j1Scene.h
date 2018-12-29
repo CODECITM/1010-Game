@@ -83,20 +83,25 @@ public:
 
 private:
 	//Default UI data list
-	SDL_Rect panel;
+	SDL_Rect panelNormal;
+	SDL_Rect panelShort;
+	SDL_Rect panelLong;
+	SDL_Rect panelSquare;
 	SDL_Rect window;
-	SDL_Rect sliderBar;
-	SDL_Rect sliderGrab;
+	SDL_Rect leftArrow;
+	SDL_Rect rightArrow;
+	//SDL_Rect slider;
+	//SDL_Rect sliderGrab;
 	SDL_Rect* button;
-	SDL_Rect* checkButton;
+	//SDL_Rect* checkButton;
 
 	//Specific UI Data
 	SDL_Rect title;
-	SDL_Rect* exit;
-	SDL_Rect* shutDown;
-	SDL_Rect* settings;
-	SDL_Rect* back;
-	SDL_Rect* webpage;
+	SDL_Rect webpage;
+	//SDL_Rect* exit;
+	//SDL_Rect* shutDown;
+	//SDL_Rect* settings;
+	//SDL_Rect* back;
 
 	//Game
 	Grid grid;

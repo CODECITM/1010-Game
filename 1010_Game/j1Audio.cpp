@@ -158,7 +158,7 @@ void j1Audio::UnloadFx()
 void j1Audio::LoadAllMusic(pugi::xml_node& config) {	// @Carles
 	musicFolder.create(config.child("music").child("folder").child_value());
 
-	//musicMainMenu.create("%s", config.child("music").child("mainMenu").child_value());
+	musicMainMenu.create("%s%s", musicFolder.GetString(), config.child("music").child("mainMenu").child_value());
 }
 
 void j1Audio::LoadAllSfx(pugi::xml_node& config) {	// @Carles

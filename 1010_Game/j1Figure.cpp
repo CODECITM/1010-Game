@@ -29,20 +29,50 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 				y = row + position.y;
 
 			switch (color) {
-			case(Color::RED):
-				active = r_figure[row][col];
+			case(Color::LIGHT_RED):
+				active = lr_figure[row][col];
 				break;
-			case(Color::BLUE):
-				active = b_figure[row][col];
-				break;
-			case(Color::GREEN):
-				active = g_figure[row][col];
+			case(Color::ORANGE):
+				active = o_figure[row][col];
 				break;
 			case(Color::YELLOW):
 				active = y_figure[row][col];
 				break;
+			case(Color::LIGHT_GREEN):
+				active = lg_figure[row][col];
+				break;
+			case(Color::GREEN):
+				active = g_figure[row][col];
+				break;
+			case(Color::GREEN_BLUE):
+				active = gb_figure[row][col];
+				break;
+			case(Color::CYAN):
+				active = c_figure[row][col];
+				break;
+			case(Color::LIGHT_BLUE):
+				active = lb_figure[row][col];
+				break;
+			case(Color::BLUE):
+				active = b_figure[row][col];
+				break;
+			case(Color::DARK_BLUE):
+				active = db_figure[row][col];
+				break;
+			case(Color::DARK_PURPLE):
+				active = dpl_figure[row][col];
+				break;
 			case(Color::PURPLE):
+				active = pl_figure[row][col];
+				break;
+			case(Color::LIGHT_PURPLE):
+				active = lpl_figure[row][col];
+				break;
+			case(Color::PINK):
 				active = p_figure[row][col];
+				break;
+			case(Color::RED):
+				active = r_figure[row][col];
 				break;
 			};
 
