@@ -218,23 +218,18 @@ bool j1Scene::PostUpdate()
 
 		switch (App->fade->GetType()) {	//CHANGE/FIX: This should be a function
 		case fade_type::MAIN_MENU:
-
 			ChangeScene(scene_type::MAIN_MENU);
 			break;
 		case fade_type::SETTINGS:
-
 			ChangeScene(scene_type::SETTINGS);
 			break;
 		case fade_type::CREDITS:
-
 			ChangeScene(scene_type::CREDITS);
 			break;
 		case fade_type::START_GAME:
-
 			ChangeScene(scene_type::GAME);
 			break;
 		case fade_type::RESTART:
-
 			App->gui->CleanUp();
 			break;
 		}
@@ -273,16 +268,29 @@ bool j1Scene::PostUpdate()
 // Called before quitting
 bool j1Scene::CleanUp()
 {
-	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
-		item->data->CleanUp();
-		delete item->data;
-	}
-	figures.clear();
-
-	for (int i = 0; i < 10; i++) {
-		for (int j = 0; j < 10; j++) {
-			delete grid.cells[i][j];
+	if (scene == scene_type::GAME) {
+		for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+			item->data->CleanUp();
+			RELEASE(item->data);
 		}
+		figures.clear();
+
+		for (int i = 0; i < 10; i++) {
+			for (int j = 0; j < 10; j++) {
+				RELEASE(grid.cells[i][j]);
+			}
+		}
+
+		for (p2List_item <SDL_Rect*>* item = piece_colors.start; item != nullptr; item = item->next) {
+			RELEASE(item->data);
+		}
+		piece_colors.clear();
+
+		App->tex->UnLoad(texture_bricks);
+		texture_bricks = nullptr;
+
+		image_string.Clear();
+
 	}
 
 	return true;
@@ -543,8 +551,9 @@ bool j1Scene::Save(pugi::xml_node& data) const
 
 void j1Scene::ChangeScene(scene_type scene)
 {
-	this->scene = scene;
 	App->gui->CleanUp();
-	CleanUp();//@Eric FIX THIS
+	CleanUp();
+
+	this->scene = scene;
 	Start();
 }

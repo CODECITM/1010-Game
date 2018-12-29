@@ -109,6 +109,7 @@ protected:
 
 	virtual void OnPress()
 	{
+		App->audio->PlayFx(App->audio->buttonPressSfx.id, 0);
 		*sprite = stateSprites[(int)button_state::PRESSING];
 		DoAction(Args...);
 	}

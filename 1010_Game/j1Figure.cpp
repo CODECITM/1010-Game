@@ -108,10 +108,10 @@ bool j1Figure::Start() {
 bool j1Figure::CleanUp() {
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			delete cells[i][j];
+			RELEASE(cells[i][j]);
 		}
 	}
-	delete rect;
+	RELEASE(rect);
 	return true;
 }
 
@@ -200,7 +200,7 @@ bool j1Figure::moveCells(fPoint movement) {
 
 Cell::~Cell()
 {
-	delete rect;
+	RELEASE(rect);
 }
 
 void Cell::Draw()

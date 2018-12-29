@@ -8,22 +8,21 @@
 		<sfx volume="100" />
 	</audio>
 	<fonts />
-	<userInterface />
 	<data>
-		<total_played_time>5.06400013</total_played_time>
-		<total_number_of_clicks>4</total_number_of_clicks>
+		<total_played_time>28.0380001</total_played_time>
+		<total_number_of_clicks>1</total_number_of_clicks>
 		<first_step>
 			<clicks_to_find_play_button>0</clicks_to_find_play_button>
 			<time_to_find_play_button>0</time_to_find_play_button>
 		</first_step>
 		<second_step>
 			<average_time_to_place>0</average_time_to_place>
-			<average_time_to_return>0.479000002</average_time_to_return>
+			<average_time_to_return>0</average_time_to_return>
 			<average_time_to_score>0</average_time_to_score>
-			<total_actions>5</total_actions>
+			<total_actions>0</total_actions>
 			<total_scoring>0</total_scoring>
-			<total_picked_blocks>4</total_picked_blocks>
-			<total_returned_blocks>1</total_returned_blocks>
+			<total_picked_blocks>0</total_picked_blocks>
+			<total_returned_blocks>0</total_returned_blocks>
 			<total_placed_blocks>0</total_placed_blocks>
 		</second_step>
 	</data>
