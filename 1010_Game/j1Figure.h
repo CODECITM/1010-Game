@@ -6,11 +6,21 @@ struct SDL_Texture;
 enum Color {
 	COLOR_NONE = -1,
 	GREY,
-	RED,
-	GREEN,
+	LIGHT_RED,
+	ORANGE,
 	YELLOW,
-	BLUE, 
-	PURPLE
+	LIGHT_GREEN,
+	GREEN,
+	GREEN_BLUE,
+	CYAN,
+	LIGHT_BLUE,
+	BLUE,
+	DARK_BLUE,
+	DARK_PURPLE,
+	PURPLE,
+	LIGHT_PURPLE,
+	PINK,
+	RED,
 };
 
 struct Cell {

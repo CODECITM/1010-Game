@@ -78,12 +78,21 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	image_string.create(item.attribute("file").as_string());
 
 	piece_colors.add(new SDL_Rect({ item.child("gray").attribute("x").as_int(),item.child("gray").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
-	piece_colors.add(new SDL_Rect({ item.child("red").attribute("x").as_int(),item.child("red").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
-	piece_colors.add(new SDL_Rect({ item.child("green").attribute("x").as_int(),item.child("green").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("lightRed").attribute("x").as_int(),item.child("lightRed").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("orange").attribute("x").as_int(),item.child("orange").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	piece_colors.add(new SDL_Rect({ item.child("yellow").attribute("x").as_int(),item.child("yellow").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("lightGreen").attribute("x").as_int(),item.child("lightGreen").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("green").attribute("x").as_int(),item.child("green").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("greenBlue").attribute("x").as_int(),item.child("greenBlue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("cyan").attribute("x").as_int(),item.child("cyan").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("lightBlue").attribute("x").as_int(),item.child("lightBlue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	piece_colors.add(new SDL_Rect({ item.child("blue").attribute("x").as_int(),item.child("blue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("darkBlue").attribute("x").as_int(),item.child("darkBlue").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("darkPurple").attribute("x").as_int(),item.child("darkPurple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	piece_colors.add(new SDL_Rect({ item.child("purple").attribute("x").as_int(),item.child("purple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
-
+	piece_colors.add(new SDL_Rect({ item.child("lightPurple").attribute("x").as_int(),item.child("lightPurple").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("pink").attribute("x").as_int(),item.child("pink").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
+	piece_colors.add(new SDL_Rect({ item.child("red").attribute("x").as_int(),item.child("red").attribute("y").as_int(),CELL_SIZE,CELL_SIZE }));
 	return ret;
 }
 
@@ -273,7 +282,6 @@ bool j1Scene::CleanUp()
 	for (int i = 0; i < 10; i++) {
 		for (int j = 0; j < 10; j++) {
 			delete grid.cells[i][j];
-			grid.cells[i][j] = nullptr;
 		}
 	}
 
@@ -372,28 +380,47 @@ void j1Scene::createFigures() {
 	float x = 80;
 	Color color;
 	for (int i = 0; i < 3; i++) {
-		int r = rand() % 100; //is Working??
+		int r = rand() % 100;
 		//INSERT FIGURES SPAWN
-		if (r < 50) { //EASY
-
+		if (r < 40) { //EASY
+			r = rand() % 5;
+			if (r < 1)
+				color = ORANGE;
+			else if (r < 2)
+				color = YELLOW;
+			else if (r < 3)
+				color = LIGHT_GREEN;
+			else if (r < 4)
+				color = GREEN;
+			else if (r < 5)
+				color = DARK_PURPLE;
 		}else if (r < 80) { //MEDIUM
-
+			r = rand() % 5;
+			if (r < 1)
+				color = GREEN_BLUE;
+			else if (r < 2)
+				color = BLUE;
+			else if (r < 3)
+				color = PINK;
+			else if (r < 4)
+				color = RED;
+			else if (r < 5)
+			color = LIGHT_PURPLE;
+			
 		}
-		else if (r < 100) { //HARD
-		
-		} 
-
-
-		if (r < 40)
-			color = RED;
-		else if (r < 60)
-			color = BLUE;
-		else if (r < 70)
-			color = PURPLE;
-		else if (r < 80)
-			color = YELLOW;
-		else if (r < 100)
-			color = GREEN;
+		else if (r < 100) { //RARE
+			r = rand() % 5;
+			if (r < 1)
+				color = PURPLE;
+			else if (r < 2)
+				color = DARK_BLUE;
+			else if (r < 3)
+				color = LIGHT_BLUE;
+			else if (r < 4)
+				color = LIGHT_RED;
+			else if (r < 5)
+				color = CYAN;
+		}
 
 		figures.add(new j1Figure({ x,100 }, color));
 		x += 155;
@@ -517,8 +544,7 @@ bool j1Scene::Save(pugi::xml_node& data) const
 void j1Scene::ChangeScene(scene_type scene)
 {
 	this->scene = scene;
-
 	App->gui->CleanUp();
-	//CleanUp();//@Eric FIX THIS
+	CleanUp();//@Eric FIX THIS
 	Start();
 }
