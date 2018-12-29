@@ -426,7 +426,7 @@ void j1Scene::createFigures() {
 	for (int i = 0; i < 3; i++) {
 		int r = rand() % 100; //is Working?? //SDL_GetTicks() % 100 => more random
 		//INSERT FIGURES SPAWN
-		if (r < 40) { //EASY
+		if (r < dif_prov[difficulty][0]) { //EASY
 			r = rand() % 5;
 			if (r < 1)
 				color = ORANGE;
@@ -438,7 +438,7 @@ void j1Scene::createFigures() {
 				color = GREEN;
 			else if (r < 5)
 				color = DARK_PURPLE;
-		}else if (r < 80) { //MEDIUM
+		}else if (r < dif_prov[difficulty][1]) { //MEDIUM
 			r = rand() % 5;
 			if (r < 1)
 				color = GREEN_BLUE;
@@ -452,7 +452,7 @@ void j1Scene::createFigures() {
 			color = LIGHT_PURPLE;
 			
 		}
-		else if (r < 100) { //RARE
+		else if (r < dif_prov[difficulty][2]) { //RARE
 			r = rand() % 5;
 			if (r < 1)
 				color = PURPLE;

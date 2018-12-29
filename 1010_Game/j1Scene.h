@@ -112,6 +112,9 @@ private:
 	j1PerfTimer del_time;
 	bool check = false;
 	p2SString image_string;
+	int dif_prov[3][3] = { {60,90,100},{ 40,80,100},{30,70,100} };
+	int difficulty = 1;
+
 
 
 };
