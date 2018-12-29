@@ -98,7 +98,7 @@ SDL_Rect Text::ChangeContent(p2SString string)
 		graphics = nullptr;
 	}
 
-	content = string;
+	content = string.GetString();
 	graphics = App->font->Print(string.GetString(), color, font);
 	App->tex->GetSize(graphics, (uint&)this->sprite->w, (uint&)this->sprite->h);
 

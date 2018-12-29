@@ -135,7 +135,7 @@ bool j1Scene::Start()
 		App->gui->CreateCheckBox(&Mute, &App->audio->muted, { 576 - 115 / 2 - 30, 900 - 115 / 2 - 30 }, sound, NULL, false);
 		break;
 	case scene_type::CREDITS:
-		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/129 / 2 + 30 }, leftArrow, NULL, false);
 
 		App->gui->CreateImage({ 576 / 2, 440 }, window, NULL, false);
 		App->gui->CreateText({ 576 / 2, 400 }, "Made by <CODE>", BLACK_FONT, titleFont, false);
@@ -145,7 +145,7 @@ bool j1Scene::Start()
 		App->gui->CreateButton(&OpenWebpage, { 576 - 123 / 2 - 30, 900 - 123 / 2 - 30 }, webpage, NULL, false);
 		break;
 	case scene_type::SETTINGS:
-		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/129 / 2 + 30 }, leftArrow, NULL, false);
 
 		parent = App->gui->CreateImage({ 576 / 2, 440 }, panelShort, NULL, false);
 		difficultyTxt = (Text*)App->gui->CreateText(DEFAULT_POINT, "walapop", WHITE_FONT, titleFont, false, parent);
@@ -157,9 +157,12 @@ bool j1Scene::Start()
 		break;
 	case scene_type::GAME:
 		//UI
-		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
-		App->gui->CreateButton(&StartGame, { 576 - 114 / 2 - 30, /*900 -*/ 129 / 2 + 30 }, restart, NULL, false);
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/129 / 2 + 30 }, leftArrow, NULL, false);
+		App->gui->CreateButton(&StartGame, { 576 - 114 / 2 - 30, /*900 -*/129 / 2 + 30 }, restart, NULL, false);
 		App->gui->CreateCheckBox(&Mute, &App->audio->muted, { 576 - 115 / 2 - 30, 900 - 115 / 2 - 30 }, sound, NULL, false);
+		
+		App->gui->CreateText({ 576 / 2, 100 }, "SCORE", WHITE_FONT, titleFont, false);
+		scoreTxt = (Text*)App->gui->CreateText({ 576 / 2, 150 }, "0", WHITE_FONT, textFont, false);
 
 		//Initialize Game
 		texture_bricks = App->tex->Load(image_string.GetString());
@@ -206,6 +209,14 @@ bool j1Scene::PreUpdate()
 	return true;
 }
 
+int j1Scene::UpdateScoreboard()
+{
+	p2SString tmpStr("%i", score);
+	scoreTxt->ChangeContent(tmpStr);
+	tmpStr.Clear();
+	return score;
+}
+
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
@@ -218,6 +229,7 @@ bool j1Scene::Update(float dt)
 
 		if (deleteLines()) {
 			if (!checkFigures()) {
+				App->gui->CreateText({ 576 / 2, 570 }, "GAME OVER", {255, 0, 0, 255}, App->font->titleFont, false);
 				LOG("ENDGAME");
 			}
 		}
@@ -304,6 +316,8 @@ bool j1Scene::PostUpdate()
 // Called before quitting
 bool j1Scene::CleanUp()
 {
+	score = 0;
+
 	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
 		item->data->CleanUp();
 		RELEASE(item->data);
@@ -317,6 +331,7 @@ bool j1Scene::CleanUp()
 	}
 
 	App->tex->UnLoad(texture_bricks);
+	scoreTxt = nullptr;
 	difficultyTxt = nullptr;
 	texture_bricks = nullptr;
 
@@ -401,7 +416,8 @@ bool j1Scene::detectLines() {
 			line.row = row;
 			lines.add(line);
 			ret = true;
-			//ADD POINTS @Eric
+			score += 10;
+			UpdateScoreboard();
 		}
 	}
 
@@ -416,7 +432,8 @@ bool j1Scene::detectLines() {
 			line.col = col;
 			lines.add(line);
 			ret = true;
-			//ADD POINTS @Eric
+			score += 10;
+			UpdateScoreboard();
 		}
 	}
 	return ret;
@@ -479,7 +496,7 @@ bool j1Scene::checkFigures() {
 
 	iPoint cell;
 	float distance = -1.0f;
-	if (figures.count() == 0) {
+	if (figures.count() == 0 || App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		figures.clear();
 
 		createFigures();
