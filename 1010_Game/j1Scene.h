@@ -74,11 +74,13 @@ public:
 
 private:
 	void RegisterButtonData(pugi::xml_node&, SDL_Rect* button);
+	void ChangeScene(scene_type scene);
 
 public:
 	scene_type scene;
 	SDL_Texture* texture_bricks;
 	p2List<SDL_Rect*> piece_colors;
+
 private:
 	//Default UI data list
 	SDL_Rect panel;
@@ -89,6 +91,7 @@ private:
 	SDL_Rect* checkButton;
 
 	//Specific UI Data
+	SDL_Rect title;
 	SDL_Rect* exit;
 	SDL_Rect* shutDown;
 	SDL_Rect* settings;

@@ -37,6 +37,8 @@ public:
 public:
 	p2List<_TTF_Font*>	fonts;
 	_TTF_Font*			defaultFont;
+	_TTF_Font*			titleFont;
+	_TTF_Font*			textFont;
 
 private:
 	p2SString folder;

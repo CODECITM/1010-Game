@@ -20,6 +20,7 @@ class j1Scene;
 //class j1EntityManager;
 class j1UserInterface;
 class j1Fonts;
+class j1Data;
 //class j1Collision;
 class j1FadeScene;
 
@@ -102,6 +103,7 @@ public:
 	j1UserInterface*	gui;
 	//j1EntityManager*	entityManager;
 	//j1Collision*		collision;
+	j1Data*				data;
 	j1FadeScene*		fade;
 
 	bool debugMode;

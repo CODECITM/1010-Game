@@ -34,7 +34,7 @@ public:
 	bool PreUpdate();
 
 	// Called each frame (logic)
-	bool UpdateTick(float dt);
+	bool Update(float dt);
 
 	// Called each frame (graphic)
 	bool Draw();

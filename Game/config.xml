@@ -52,21 +52,27 @@
   <fonts>
     <folder>fonts/</folder>    
     <defaultFont file="open_sans/OpenSans-Regular.ttf" size="10" />
-    
+    <titleFont file="bowbly-one/BowlbyOneSC-Regular.ttf" size="35" />
+    <textFont file="letteromatic/ltromatic.ttf" size="30" />
   </fonts>
 
   <map>
     <folder>Assets/maps/</folder>
   </map>
 
+  <fade>
+    <duration seconds="0.5" />
+  </fade>
+  
   <scenes start="0">
     <ui>
       <!-- Default -->
       <panel x="294" y="760" w="159" h="38" />
       <window x="21" y="453" w="226" h="318" />
-      <button x1="317" y1="585" w1="101" h1="40" x2="317" y2="626" w2="101" h2="40" x3="317" y3="667" w3="101" h3="40" x4="317" y4="707" w4="101" h4="40"/>
+      <button x1="0" y1="459" w1="263" h1="133" x2="0" y2="459" w2="263" h2="133" x3="0" y3="459" w3="263" h3="133" x4="453" y4="400" w4="263" h4="133"/>
       <checkButton x1="273" y1="519" w1="34" h1="34" x2="273" y2="484" w2="34" h2="34" x3="273" y3="449" w3="34" h3="34"/>
       <!-- Specific -->
+      <title x="422" y="540" w="389" h="120" />
       <exit x1="258" y1="625" w1="32" h1="32" x2="258" y2="625" w2="32" h2="32" x3="258" y3="658" w3="32" h3="32" x4="258" y4="658" w4="32" h4="32"/>
       <shutDown x1="258" y1="556" w1="32" h1="32" x2="258" y2="556" w2="32" h2="32" x3="258" y3="590" w3="32" h3="32" x4="258" y4="590" w4="32" h4="32"/>
       <settings x1="258" y1="692" w1="32" h1="32" x2="258" y2="692" w2="32" h2="32" x3="258" y3="725" w3="32" h3="32" x4="258" y4="725" w4="32" h4="32"/>
