@@ -53,7 +53,7 @@
     <folder>fonts/</folder>    
     <defaultFont file="open_sans/OpenSans-Regular.ttf" size="10" />
     <titleFont file="bowbly-one/BowlbyOneSC-Regular.ttf" size="35" />
-    <textFont file="letteromatic/ltromatic.ttf" size="30" />
+    <textFont file="letteromatic/ltromatic.ttf" size="33" />
   </fonts>
 
   <map>
