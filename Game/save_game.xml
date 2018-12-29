@@ -10,13 +10,13 @@
 	<fonts />
 	<gui />
 	<data>
-		<total_played_time>5.01800013</total_played_time>
-		<total_number_of_clicks>4</total_number_of_clicks>
+
 		<first_step>
 			<clicks_to_find_play_button>0</clicks_to_find_play_button>
-			<time_to_find_play_button>0</time_to_find_play_button>
+			<time_to_find_play_button>0.64200002</time_to_find_play_button>
 		</first_step>
 		<second_step>
+
 			<average_time_to_place>0</average_time_to_place>
 			<average_time_to_return>0</average_time_to_return>
 			<average_time_to_score>0</average_time_to_score>
@@ -24,8 +24,14 @@
 			<total_scoring>0</total_scoring>
 			<total_picked_blocks>1</total_picked_blocks>
 			<total_returned_blocks>0</total_returned_blocks>
-			<total_placed_blocks>0</total_placed_blocks>
+
 		</second_step>
+		<score_tracking average_times_between_scores="23.552">
+			<score_1 time_to_score="23.552">
+				<time_to_place placed="11">1.19272733</time_to_place>
+				<time_to_return returned="0">0</time_to_return>
+			</score_1>
+		</score_tracking>
 	</data>
 	<scenes />
 	<fade />
