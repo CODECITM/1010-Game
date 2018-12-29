@@ -276,7 +276,6 @@ void j1Scene::createFigures() {
 	Color color;
 	for (int i = 0; i < 3; i++) {
 		int r = rand() % 100; //is Working??
-		LOG("%i", r);
 		//INSERT FIGURES SPAWN
 		if (r < 50) { //EASY
 
@@ -352,9 +351,7 @@ bool j1Scene::checkFigures() {
 				if (isValid(cell, item->data)) {
 					detectLines(); //Check if Game Stops unespectedly
 					figures.del(item);
-					if (figures.count() != 0) {
-						ret = checkPosibilities();
-					}
+					check = true;
 				}
 				else {
 					item->data->resetFigure();

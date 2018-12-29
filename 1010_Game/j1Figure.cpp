@@ -56,6 +56,7 @@ j1Figure::j1Figure(fPoint position, Color color) : position(position), color(col
 				new SDL_Rect({ (int)x, (int)y, CELL_SIZE, CELL_SIZE }),
 				active,
 				c_color);
+			check = false;
 		}
 	}
 
@@ -133,11 +134,11 @@ void j1Figure::moveFigure()
 
 		moveCells(mouseMov);
 	}
-	else if(App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP){
+	else if(setMouseGrabPos == true && App->input->GetMouseButtonDown(SDL_BUTTON_LEFT) == KEY_UP){
 		if(setMouseGrabPos)
 			App->audio->PlayFx(SFX_PIECE_DROPPED);
 		setMouseGrabPos = false;
-		check = true;
+		check = true;//CHECK
 	}
 }
 
