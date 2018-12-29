@@ -495,7 +495,7 @@ bool j1Scene::checkFigures() {
 
 	iPoint cell;
 	float distance = -1.0f;
-	if (figures.count() == 0) {
+	if (figures.count() == 0 || App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN) {
 		figures.clear();
 
 		createFigures();
