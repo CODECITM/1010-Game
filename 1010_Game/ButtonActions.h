@@ -1,10 +1,12 @@
 #pragma once
 #include "j1App.h"
 #include "j1FadeScene.h"
+#include "j1Data.h"
 
 void StartGame()
 {
 	App->fade->FadeToBlack(App->fade->GetDelay(), fade_type::START_GAME);
+	App->data->StartGame();
 }
 
 void GoToSettings()
