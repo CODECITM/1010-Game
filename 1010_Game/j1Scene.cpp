@@ -335,8 +335,9 @@ bool j1Scene::CleanUp()
 }
 
 bool j1Scene::deleteLines() {
-	bool ret = true;
+	bool ret = false;
 	if (del_time.ReadMs() > 30) {
+		ret = true;
 		del_time.Start();
 		for (p2List_item<Line>* item = lines.start; item != nullptr; item = item->next) {
 			int index = item->data.index;
