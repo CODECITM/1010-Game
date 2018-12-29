@@ -22,8 +22,8 @@ j1Scene::j1Scene() : j1Module()
 	name.create("scenes");
 
 	button = new SDL_Rect[4];
-	/*checkButton = new SDL_Rect[3];
-	exit = new SDL_Rect[4];
+	sound = new SDL_Rect[3];
+	/*exit = new SDL_Rect[4];
 	shutDown = new SDL_Rect[4];
 	settings = new SDL_Rect[4];
 	back = new SDL_Rect[4];
@@ -32,15 +32,7 @@ j1Scene::j1Scene() : j1Module()
 
 // Destructor
 j1Scene::~j1Scene()
-{
-	RELEASE_ARRAY(button);
-	/*RELEASE_ARRAY(checkButton);
-	RELEASE_ARRAY(exit);
-	RELEASE_ARRAY(shutDown);
-	RELEASE_ARRAY(settings);
-	RELEASE_ARRAY(back);
-	RELEASE_ARRAY(webpage);*/
-}
+{}
 
 // Called before render is available
 bool j1Scene::Awake(pugi::xml_node& config)
@@ -80,17 +72,13 @@ bool j1Scene::Awake(pugi::xml_node& config)
 
 	RegisterButtonData(config.child("ui").child("button"), button);
 
-	/*item = config.child("ui").child("checkButton");
-	checkButton[0] = { item.attribute("x1").as_int(), item.attribute("y1").as_int(), item.attribute("w1").as_int(), item.attribute("h1").as_int() };
-	checkButton[1] = { item.attribute("x2").as_int(), item.attribute("y2").as_int(), item.attribute("w2").as_int(), item.attribute("h2").as_int() };
-	checkButton[2] = { item.attribute("x3").as_int(), item.attribute("y3").as_int(), item.attribute("w3").as_int(), item.attribute("h3").as_int() };
+	item = config.child("ui").child("sound");
+	sound[0] = { item.attribute("x1").as_int(), item.attribute("y1").as_int(), item.attribute("w1").as_int(), item.attribute("h1").as_int() };
+	sound[1] = { item.attribute("x2").as_int(), item.attribute("y2").as_int(), item.attribute("w2").as_int(), item.attribute("h2").as_int() };
+	sound[2] = { item.attribute("x3").as_int(), item.attribute("y3").as_int(), item.attribute("w3").as_int(), item.attribute("h3").as_int() };
 
-	RegisterButtonData(config.child("ui").child("exit"), exit);
-	RegisterButtonData(config.child("ui").child("shutDown"), shutDown);
-	RegisterButtonData(config.child("ui").child("settings"), settings);
-	RegisterButtonData(config.child("ui").child("back"), back);
-	RegisterButtonData(config.child("ui").child("webpage"), webpage);*/
-
+	item = config.child("ui").child("restart");
+	restart = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
 
 	item = config.child("pieces");
 	image_string.create(item.attribute("file").as_string());
@@ -143,33 +131,29 @@ bool j1Scene::Start()
 		App->gui->CreateText(DEFAULT_POINT, "Settings", WHITE_FONT, textFont, false, parent);
 		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 650 }, button, NULL, false);
 		App->gui->CreateText(DEFAULT_POINT, "Credits", WHITE_FONT, textFont, false, parent);
-		//App->gui->CreateActionBox(&CloseGame, { 20, 20 }, shutDown, NULL, false);
-		//App->gui->CreateActionBox(&OpenWebpage, { 55, 20 }, webpage, NULL, false);
-		break;
-	case scene_type::SETTINGS:
-		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, 129 / 2 + 30 }, leftArrow, NULL, false);
 
-		//App->gui->CreateImage({ 576 / 2, 180 }, title, NULL, false);
-		parent = App->gui->CreateActionBox(&StartGame, { 576 / 2, 350 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Start", WHITE_FONT, textFont, false, parent);
-		parent = App->gui->CreateActionBox(&GoToSettings, { 576 / 2, 500 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Settings", WHITE_FONT, textFont, false, parent);
-		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 650 }, button, NULL, false);
-		App->gui->CreateText(DEFAULT_POINT, "Credits", WHITE_FONT, textFont, false, parent);
+		App->gui->CreateCheckBox(&Mute, &App->audio->muted, { 576 - 115 / 2 - 30, 900 - 115 / 2 - 30 }, sound, NULL, false);
 		break;
 	case scene_type::CREDITS:
-		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, 129 / 2 + 30 }, leftArrow, NULL, false);
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
 
 		App->gui->CreateImage({ 576 / 2, 440 }, window, NULL, false);
 		App->gui->CreateText({ 576 / 2, 400 }, "Made by <CODE>", BLACK_FONT, titleFont, false);
 		App->gui->CreateText({ 576 / 2, 440 }, "from the UPC - CITM", BLACK_FONT, titleFont, false);
 		App->gui->CreateText({ 576 / 2, 480 }, "under the MIT License", BLACK_FONT, titleFont, false);
 
-		App->gui->CreateButton(&OpenWebpage, { 576 - 123 / 2 - 30, 123 / 2 + 30 }, webpage, NULL, false);
+		App->gui->CreateButton(&OpenWebpage, { 576 - 123 / 2 - 30, 900 - 123 / 2 - 30 }, webpage, NULL, false);
+		break;
+	case scene_type::SETTINGS:
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
+
+		
 		break;
 	case scene_type::GAME:
 		//UI
-
+		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
+		App->gui->CreateButton(&StartGame, { 576 - 114 / 2 - 30, /*900 -*/ 129 / 2 + 30 }, restart, NULL, false);
+		App->gui->CreateCheckBox(&Mute, &App->audio->muted, { 576 - 115 / 2 - 30, 900 - 115 / 2 - 30 }, sound, NULL, false);
 
 		//Initialize Game
 		texture_bricks = App->tex->Load(image_string.GetString());
@@ -177,7 +161,7 @@ bool j1Scene::Start()
 		cell_size = 30;
 		cell_offset = 5;
 
-		grid.position = { 80,230 };
+		grid.position = { 80, 160 };
 
 		//GRID
 		for (int row = 0; row < 10; row++) {
@@ -246,14 +230,21 @@ bool j1Scene::PostUpdate()
 {
 	bool ret = true;
 
-	if (App->input->GetKey(SDL_SCANCODE_ESCAPE))
+	if (App->input->GetKey(SDL_SCANCODE_ESCAPE)) {
+		scene = scene_type::NONE;
 		return false;
+	}
 
 	if (App->fade->GetStep() == fade_step::FULLY_FADED) {	// When game is fully faded, start game load and disable all entities for the next frame, then enable them.
 		App->gui->active = false;
 
-		switch (App->fade->GetType()) {	//CHANGE/FIX: This should be a function
+		switch (App->fade->GetType()) {
 		case fade_type::MAIN_MENU:
+			if (scene == scene_type::GAME) {
+				CleanUp();
+				App->audio->StopMusic();
+			}
+
 			ChangeScene(scene_type::MAIN_MENU);
 			break;
 		case fade_type::SETTINGS:
@@ -263,6 +254,9 @@ bool j1Scene::PostUpdate()
 			ChangeScene(scene_type::CREDITS);
 			break;
 		case fade_type::START_GAME:
+			if (scene == scene_type::GAME)
+				CleanUp();
+
 			ChangeScene(scene_type::GAME);
 			break;
 		case fade_type::RESTART:
@@ -304,29 +298,30 @@ bool j1Scene::PostUpdate()
 // Called before quitting
 bool j1Scene::CleanUp()
 {
-	if (scene == scene_type::GAME) {
-		for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
-			item->data->CleanUp();
-			RELEASE(item->data);
-		}
-		figures.clear();
+	for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
+		item->data->CleanUp();
+		RELEASE(item->data);
+	}
+	figures.clear();
 
-		for (int i = 0; i < 10; i++) {
-			for (int j = 0; j < 10; j++) {
-				RELEASE(grid.cells[i][j]);
-			}
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			RELEASE(grid.cells[i][j]);
 		}
+	}
 
+	App->tex->UnLoad(texture_bricks);
+	texture_bricks = nullptr;
+
+	if (scene == scene_type::NONE) {
 		for (p2List_item <SDL_Rect*>* item = piece_colors.start; item != nullptr; item = item->next) {
 			RELEASE(item->data);
 		}
 		piece_colors.clear();
-
-		App->tex->UnLoad(texture_bricks);
-		texture_bricks = nullptr;
-
 		image_string.Clear();
 
+		RELEASE_ARRAY(button);
+		RELEASE_ARRAY(sound);
 	}
 
 	return true;
@@ -426,7 +421,7 @@ void j1Scene::createFigures() {
 	for (int i = 0; i < 3; i++) {
 		int r = rand() % 100; //is Working?? //SDL_GetTicks() % 100 => more random
 		//INSERT FIGURES SPAWN
-		if (r < 40) { //EASY
+		if (r < dif_prov[difficulty][0]) { //EASY
 			r = rand() % 5;
 			if (r < 1)
 				color = ORANGE;
@@ -438,7 +433,7 @@ void j1Scene::createFigures() {
 				color = GREEN;
 			else if (r < 5)
 				color = DARK_PURPLE;
-		}else if (r < 80) { //MEDIUM
+		}else if (r < dif_prov[difficulty][1]) { //MEDIUM
 			r = rand() % 5;
 			if (r < 1)
 				color = GREEN_BLUE;
@@ -452,7 +447,7 @@ void j1Scene::createFigures() {
 			color = LIGHT_PURPLE;
 			
 		}
-		else if (r < 100) { //RARE
+		else if (r < dif_prov[difficulty][2]) { //RARE
 			r = rand() % 5;
 			if (r < 1)
 				color = PURPLE;
@@ -466,7 +461,7 @@ void j1Scene::createFigures() {
 				color = CYAN;
 		}
 
-		figures.add(new j1Figure({ x,100 }, color));
+		figures.add(new j1Figure({ x, 600 }, color));
 		x += 155;
 	}
 }
@@ -593,7 +588,6 @@ bool j1Scene::Save(pugi::xml_node& data) const
 void j1Scene::ChangeScene(scene_type scene)
 {
 	App->gui->CleanUp();
-	CleanUp();
 
 	this->scene = scene;
 	Start();

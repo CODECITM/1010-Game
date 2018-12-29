@@ -90,18 +90,13 @@ private:
 	SDL_Rect window;
 	SDL_Rect leftArrow;
 	SDL_Rect rightArrow;
-	//SDL_Rect slider;
-	//SDL_Rect sliderGrab;
 	SDL_Rect* button;
-	//SDL_Rect* checkButton;
 
 	//Specific UI Data
 	SDL_Rect title;
 	SDL_Rect webpage;
-	//SDL_Rect* exit;
-	//SDL_Rect* shutDown;
-	//SDL_Rect* settings;
-	//SDL_Rect* back;
+	SDL_Rect restart;
+	SDL_Rect* sound;
 
 	//Game
 	Grid grid;
@@ -112,6 +107,9 @@ private:
 	j1PerfTimer del_time;
 	bool check = false;
 	p2SString image_string;
+	int dif_prov[3][3] = { {60,90,100},{ 40,80,100},{30,70,100} };
+	int difficulty = 1;
+
 
 
 };

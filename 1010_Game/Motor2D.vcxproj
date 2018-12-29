@@ -14,7 +14,7 @@
     <ProjectGuid>{2AF9969B-F202-497B-AF30-7BEF9CE8005E}</ProjectGuid>
     <RootNamespace>programacio_2</RootNamespace>
     <ProjectName>1010_Game</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -98,7 +98,6 @@
     <ClCompile Include="j1Textures.cpp" />
     <ClCompile Include="j1Window.cpp" />
     <ClCompile Include="PugiXml\src\pugixml.cpp" />
-    <ClCompile Include="Slider.cpp" />
     <ClCompile Include="Text.cpp" />
     <ClCompile Include="UIElement.cpp" />
   </ItemGroup>
@@ -106,6 +105,7 @@
     <ClInclude Include="ActionBox.h" />
     <ClInclude Include="Button.h" />
     <ClInclude Include="ButtonActions.h" />
+    <ClInclude Include="CheckBox.h" />
     <ClInclude Include="Figure_Templates.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="j1Animation.h" />
@@ -132,15 +132,11 @@
     <ClInclude Include="p2SString.h" />
     <ClInclude Include="PugiXml\src\pugiconfig.hpp" />
     <ClInclude Include="PugiXml\src\pugixml.hpp" />
-    <ClInclude Include="Slider.h" />
     <ClInclude Include="Text.h" />
     <ClInclude Include="UIElement.h" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Game\config.xml">
-      <SubType>Designer</SubType>
-    </Xml>
-    <Xml Include="..\Game\save_game.xml">
       <SubType>Designer</SubType>
     </Xml>
   </ItemGroup>

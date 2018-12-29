@@ -76,6 +76,8 @@ public:	// @Carles
 	ushort musicVolume;
 	ushort sfxVolume;
 
+	bool muted = false;
+
 private:
 
 	void LoadAllMusic(pugi::xml_node&);		// @Carles

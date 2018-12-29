@@ -64,9 +64,6 @@
     <ClCompile Include="j1Data.cpp">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClCompile>
-    <ClCompile Include="Slider.cpp">
-      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -162,8 +159,8 @@
     <ClInclude Include="j1Data.h">
       <Filter>Desenvolupament  ========\Modules</Filter>
     </ClInclude>
-    <ClInclude Include="Slider.h">
-      <Filter>Desenvolupament  ========\User Interface\UIElements\Images</Filter>
+    <ClInclude Include="CheckBox.h">
+      <Filter>Desenvolupament  ========\User Interface\UIElements\Images\Buttons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -206,9 +203,6 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\Game\config.xml">
-      <Filter>Desenvolupament  ========\XML</Filter>
-    </Xml>
-    <Xml Include="..\Game\save_game.xml">
       <Filter>Desenvolupament  ========\XML</Filter>
     </Xml>
   </ItemGroup>

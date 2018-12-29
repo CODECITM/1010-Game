@@ -14,6 +14,11 @@ Text::Text(const char* content, SDL_Color color, _TTF_Font* font, fPoint center,
 	this->content.create(content);	//@Carles: p2SString constructor restarts the string otherwise
 }
 
+Text::~Text()
+{
+	content.Clear();
+}
+
 const char* Text::GetText() const
 {
 	return content.GetString();

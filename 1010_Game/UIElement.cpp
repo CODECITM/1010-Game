@@ -31,6 +31,8 @@ bool UIElement::CleanUp()
 	}
 	children.clear();
 
+	name.Clear();
+
 	return ret;
 }
 

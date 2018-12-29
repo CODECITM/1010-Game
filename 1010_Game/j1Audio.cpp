@@ -75,6 +75,17 @@ bool j1Audio::CleanUp()
 
 	LOG("Freeing sound FX, closing Mixer and Audio subsystem");
 
+	musicMainMenu.Clear();
+
+	buttonHoverSfx.filename.Clear();
+	buttonPressSfx.filename.Clear();
+	PieceDroppedSfx.filename.Clear();
+	PiecePickedSfx.filename.Clear();
+	BrickDestroyedSfx.filename.Clear();
+
+	musicFolder.Clear();
+	sfxFolder.Clear();
+
 	if(music != NULL)
 	{
 		Mix_FreeMusic(music);

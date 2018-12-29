@@ -29,16 +29,14 @@ void CloseGame()
 	App->mustShutDown = true;
 }
 
-void OpenSettings()
+void Mute()
 {
-	/*if (App->scene->settingsWindow != nullptr)
-		App->scene->settingsWindow->Activate();*/
-}
-
-void CloseSettings()
-{
-	/*if (App->scene->settingsWindow != nullptr)
-		App->scene->settingsWindow->Deactivate();*/
+	if (App->audio->muted) {
+		App->audio->SetMasterVolume(100);
+	}
+	else {
+		App->audio->SetMasterVolume(0);
+	}
 }
 
 void OpenWebpage()

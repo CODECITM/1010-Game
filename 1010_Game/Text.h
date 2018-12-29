@@ -12,6 +12,8 @@ public:
 	//Constructor
 	Text(const char* content, SDL_Color color = { 255, 255, 255, 255 }, _TTF_Font* font = NULL, fPoint center = { 0, 0 }, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 
+	virtual ~Text();
+
 public:
 	void operator+ (const char* addition) {
 		content += addition;

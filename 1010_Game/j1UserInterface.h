@@ -56,7 +56,7 @@ public:
 
 	UIElement* CreateButton(void(*action)(void), fPoint center, SDL_Rect sprite, SDL_Texture* tex, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 	UIElement* CreateActionBox(void(*action)(void), fPoint center, SDL_Rect spriteList[4], SDL_Texture* tex, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
-	//UIElement* CreateCheckBox();
+	UIElement* CreateCheckBox(void(*action)(void), bool* value, fPoint center, SDL_Rect spriteList[3], SDL_Texture* tex, bool dynamic = false, UIElement* parent = NULL, p2List<UIElement*>* children = NULL);
 	//UIElement* CreateInputText();
 
 	//Window* CreateWindowPanel(fPoint center, p2List<Image*> children, SDL_Rect* texRect = NULL, SDL_Texture* tex = NULL, Text* label = NULL, UIElement* parent = NULL);

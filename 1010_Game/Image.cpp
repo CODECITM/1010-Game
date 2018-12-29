@@ -23,6 +23,7 @@ Image::Image(ui_type type, fPoint center, SDL_Rect sprite, SDL_Texture* tex, boo
 Image::~Image()
 {
 	RELEASE(sprite);
+	folder.Clear();
 }
 
 bool Image::UpdateTick(float dt)
