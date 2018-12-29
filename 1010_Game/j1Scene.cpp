@@ -147,7 +147,13 @@ bool j1Scene::Start()
 	case scene_type::SETTINGS:
 		App->gui->CreateButton(&GoToMenu, { 109 / 2 + 30, /*900 -*/ 129 / 2 + 30 }, leftArrow, NULL, false);
 
-		
+		parent = App->gui->CreateImage({ 576 / 2, 440 }, panelShort, NULL, false);
+		difficultyTxt = (Text*)App->gui->CreateText(DEFAULT_POINT, "walapop", WHITE_FONT, titleFont, false, parent);
+		CheckDifficulty(difficulty);
+
+		App->gui->CreateButton(&DownDifficulty, { 576 / 2 - 200, 440 }, leftArrow, NULL, false);
+		App->gui->CreateButton(&UpDifficulty, { 576 / 2 + 200, 440 }, rightArrow, NULL, false);
+
 		break;
 	case scene_type::GAME:
 		//UI
@@ -311,6 +317,7 @@ bool j1Scene::CleanUp()
 	}
 
 	App->tex->UnLoad(texture_bricks);
+	difficultyTxt = nullptr;
 	texture_bricks = nullptr;
 
 	if (scene == scene_type::NONE) {

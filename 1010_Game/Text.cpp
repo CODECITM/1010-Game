@@ -60,9 +60,15 @@ SDL_Rect Text::ChangeText(const char* string, SDL_Color color, _TTF_Font* font)
 		graphics = nullptr;
 	}
 
+	if (font == NULL)
+		font = this->font;
+
 	content.create(string);
 	graphics = App->font->Print(string, color, font);
 	App->tex->GetSize(graphics, (uint&)this->sprite->w, (uint&)this->sprite->h);
+
+	RelocatePosByCenter();
+
 	return *sprite;
 }
 
@@ -73,9 +79,47 @@ SDL_Rect Text::ChangeText(p2SString string, SDL_Color color, _TTF_Font* font)
 		graphics = nullptr;
 	}
 
+	if (font == NULL)
+		font = this->font;
+
 	content = string;
 	graphics = App->font->Print(string.GetString(), color, font);
 	App->tex->GetSize(graphics, (uint&)this->sprite->w, (uint&)this->sprite->h);
+
+	RelocatePosByCenter();
+
+	return *sprite;
+}
+
+SDL_Rect Text::ChangeContent(p2SString string)
+{
+	if (graphics != nullptr) {
+		App->tex->UnLoad(graphics);
+		graphics = nullptr;
+	}
+
+	content = string;
+	graphics = App->font->Print(string.GetString(), color, font);
+	App->tex->GetSize(graphics, (uint&)this->sprite->w, (uint&)this->sprite->h);
+
+	RelocatePosByCenter();
+
+	return *sprite;
+}
+
+SDL_Rect Text::ChangeContent(const char* string)
+{
+	if (graphics != nullptr) {
+		App->tex->UnLoad(graphics);
+		graphics = nullptr;
+	}
+
+	content = string;
+	graphics = App->font->Print(string, color, font);
+	App->tex->GetSize(graphics, (uint&)this->sprite->w, (uint&)this->sprite->h);
+
+	RelocatePosByCenter();
+
 	return *sprite;
 }
 

@@ -1,7 +1,9 @@
 #pragma once
+
 #include "j1App.h"
 #include "j1FadeScene.h"
 #include "j1Data.h"
+#include "j1Scene.h"
 
 void StartGame()
 {
@@ -42,4 +44,41 @@ void Mute()
 void OpenWebpage()
 {
 	ShellExecuteA(NULL, "open", "https://github.com/CODECITM/1010_Game", NULL, NULL, SW_SHOWNORMAL);
+}
+
+void CheckDifficulty(int difficulty)
+{
+	switch (difficulty) {
+	case 0:
+		App->scene->difficultyTxt->ChangeText("Easy", { 0, 200, 0, 255 }, NULL);
+		break;
+	case 1:
+		App->scene->difficultyTxt->ChangeText("Medium", { 255, 150, 0, 255 }, NULL);
+		break;
+	case 2:
+		App->scene->difficultyTxt->ChangeText("Hard", { 200, 0, 0, 255 }, NULL);
+		break;
+	}
+}
+
+void UpDifficulty()
+{
+	int* diffPtr = &App->scene->difficulty;
+
+	if (++(*diffPtr) > 2) {
+		*diffPtr = 0;
+	}
+
+	CheckDifficulty(*diffPtr);
+}
+
+void DownDifficulty()
+{
+	int* diffPtr = &App->scene->difficulty;
+
+	if (--(*diffPtr) < 0) {
+		*diffPtr = 2;
+	}
+
+	CheckDifficulty(*diffPtr);
 }
