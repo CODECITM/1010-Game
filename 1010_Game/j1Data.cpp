@@ -100,6 +100,33 @@ bool j1Data::Save(pugi::xml_node & node) const
 	second_step.append_child("total_returned_blocks").text().set(returned_blocks);
 	second_step.append_child("total_placed_blocks").text().set(placed_blocks);
 
+	//Extra tracking
+	pugi::xml_node score_tracking = node.append_child("score_tracking");
+	score_tracking.append_attribute("average_times_between_scores").set_value(average_time_to_score_save);
+
+	pugi::xml_node n;
+	pugi::xml_node a;
+	char c[32];
+
+	// can use same index, the three lists always Add at same point
+	for (int i = 0; i < average_list_place.count(); i++) 
+	{
+		sprintf_s(c,sizeof(c), "score_%d", int(average_list_score.At(i)->data.x));
+		n = score_tracking.append_child(c);
+		n.append_attribute("time_to_score").set_value(average_list_score.At(i)->data.y);
+
+		// placing tracking
+		a = n.append_child("time_to_place");
+		a.append_attribute("placed").set_value(average_list_place.At(i)->data.x);
+		a.text().set(average_list_place.At(i)->data.y);
+
+		// returning tracking
+		a = n.append_child("time_to_return");
+		a.append_attribute("returned").set_value(average_list_return.At(i)->data.x);
+		a.text().set(average_list_return.At(i)->data.y);
+
+	}
+
 
 	return true;
 }
@@ -107,6 +134,13 @@ bool j1Data::Save(pugi::xml_node & node) const
 void j1Data::Scored()
 {
 	total_scoring++;
+	float stopped_at = time_to_score.Stop();
+	average_time_to_score += stopped_at;
+	average_time_to_score_save = average_time_to_score / total_scoring;
+
+	average_list_place.add(fPoint(placed_blocks,average_time_to_place_save));
+	average_list_return.add(fPoint(returned_blocks, average_time_to_return_save));
+	average_list_score.add(fPoint(total_scoring, stopped_at));
 }
 
 void j1Data::Picked()
@@ -115,6 +149,7 @@ void j1Data::Picked()
 	picked_blocks++;
 	time_picking_placing.Start();
 	time_picking_returning.Start();
+	if (!time_to_score.IsRunning()) time_to_score.Start();
 }
 
 void j1Data::Returned()
@@ -133,5 +168,12 @@ void j1Data::Placed()
 {
 	total_actions++;
 	placed_blocks++;
+	average_time_to_place += time_picking_placing.Stop();
+	average_time_to_place_save = average_time_to_place / placed_blocks;
+}
 
+void j1Data::StartGame()
+{
+	clicks_to_play_button_save = total_number_clicks;
+	time_find_play_button_save = total_played_time.ReadSec();
 }

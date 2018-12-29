@@ -202,6 +202,11 @@ bool j1Scene::Update(float dt)
 		}
 	}
 
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		figures.add(new j1Figure({ 80,100 }, PURPLE));
+	}
+
 	return true;
 }
 
@@ -388,7 +393,7 @@ void j1Scene::createFigures() {
 	float x = 80;
 	Color color;
 	for (int i = 0; i < 3; i++) {
-		int r = rand() % 100;
+		int r = rand() % 100; //is Working?? //SDL_GetTicks() % 100 => more random
 		//INSERT FIGURES SPAWN
 		if (r < 40) { //EASY
 			r = rand() % 5;
@@ -481,7 +486,9 @@ bool j1Scene::checkFigures() {
 				fPoint movement = grid.cells[cell.x][cell.y]->position - item->data->cells[1][1]->position;
 				item->data->moveCells(movement);
 				if (isValid(cell, item->data)) {
-					detectLines(); //Check if Game Stops unespectedly
+					App->data->Placed();
+					if (detectLines()) //Check if Game Stops unespectedly
+						App->data->Scored(); 
 					figures.del(item);
 					check = true;
 				}
@@ -490,8 +497,11 @@ bool j1Scene::checkFigures() {
 					item->data->check = false;
 					App->data->Returned();
 				}
-			}else
+			}
+			else {
 				item->data->resetFigure();
+				App->data->Returned();
+			}
 		}
 		item = item->next;
 	}
