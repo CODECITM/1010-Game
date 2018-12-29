@@ -76,11 +76,14 @@ public:
 private:
 	void RegisterButtonData(pugi::xml_node&, SDL_Rect* button);
 	void ChangeScene(scene_type scene);
+	int UpdateScoreboard();
 
 public:
 	scene_type scene;
 	SDL_Texture* texture_bricks;
 	p2List<SDL_Rect*> piece_colors;
+	Text* scoreTxt;
+	int score = 0;
 	Text* difficultyTxt;
 	int difficulty = 1;
 
