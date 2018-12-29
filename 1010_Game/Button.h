@@ -5,6 +5,7 @@
 
 #include "j1App.h"
 #include "j1Input.h"
+#include "j1Audio.h"
 
 struct SDL_Texture;
 
@@ -117,6 +118,7 @@ protected:
 
 	virtual void OnPress()
 	{
+		App->audio->PlayFx(App->audio->buttonPressSfx.id, 0);
 		DoAction(Args...);
 	}
 
