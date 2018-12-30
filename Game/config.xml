@@ -63,6 +63,7 @@
   </fade>
   
   <scenes start="0">
+    <score points="10" random="true" max="30" min="5"/>
     <ui>
       <!-- Default -->
       <panels>

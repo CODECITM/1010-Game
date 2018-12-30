@@ -16,6 +16,7 @@
 #include "ActionBox.h"
 #include "ButtonActions.h"
 #include "j1Data.h"
+#include <ctime>
 
 j1Scene::j1Scene() : j1Module()
 {
@@ -23,11 +24,8 @@ j1Scene::j1Scene() : j1Module()
 
 	button = new SDL_Rect[4];
 	sound = new SDL_Rect[3];
-	/*exit = new SDL_Rect[4];
-	shutDown = new SDL_Rect[4];
-	settings = new SDL_Rect[4];
-	back = new SDL_Rect[4];
-	webpage = new SDL_Rect[4];*/
+	
+	srand(time(NULL));
 }
 
 // Destructor
@@ -40,7 +38,18 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	LOG("Loading Scene");
 	bool ret = true;
 
+	//Normal Awake
 	scene = (scene_type)config.attribute("start").as_int();
+	
+	randomScore = config.child("score").attribute("random").as_bool(false);
+
+	if (randomScore) {
+		maxPoints = config.child("score").attribute("max").as_int(10);
+		minPoints = config.child("score").attribute("min").as_int(0);
+	}
+	else {
+		scoreGain = config.child("score").attribute("points").as_int(10);
+	}
 
 	//UI Data Awake
 	pugi::xml_node item = config.child("ui").child("title");
@@ -80,6 +89,7 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	item = config.child("ui").child("restart");
 	restart = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
 
+	//Piece colors Awake
 	item = config.child("pieces");
 	image_string.create(item.attribute("file").as_string());
 
@@ -201,20 +211,14 @@ bool j1Scene::Start()
 // Called each loop iteration
 bool j1Scene::PreUpdate()
 {
-	/*for (p2List_item <j1Figure*>* item = figures.start; item != nullptr; item = item->next) {
-		if(!item->data->enable)
-			figures.del(item);
-	}*/
+	CheckInputs();
 	
 	return true;
 }
 
-int j1Scene::UpdateScoreboard()
+void j1Scene::CheckInputs()
 {
-	p2SString tmpStr("%i", score);
-	scoreTxt->ChangeContent(tmpStr);
-	tmpStr.Clear();
-	return score;
+	//Debug Inputs
 }
 
 // Called each loop iteration
@@ -415,7 +419,10 @@ bool j1Scene::detectLines() {
 			line.row = row;
 			lines.add(line);
 			ret = true;
-			score += 10;
+			if (randomScore)
+				score += rand() % (maxPoints - minPoints + 1) + minPoints;
+			else
+				score += scoreGain;
 			UpdateScoreboard();
 		}
 	}
@@ -431,12 +438,23 @@ bool j1Scene::detectLines() {
 			line.col = col;
 			lines.add(line);
 			ret = true;
-			score += 10;
+			if (randomScore)
+				score += rand() % (maxPoints - minPoints + 1) + minPoints;
+			else
+				score += scoreGain;
 			UpdateScoreboard();
 		}
 	}
 	return ret;
 
+}
+
+int j1Scene::UpdateScoreboard()
+{
+	p2SString tmpStr("%i", score);
+	scoreTxt->ChangeContent(tmpStr);
+	tmpStr.Clear();
+	return score;
 }
 
 void j1Scene::createFigures() {

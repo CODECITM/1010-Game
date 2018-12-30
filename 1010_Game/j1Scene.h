@@ -74,6 +74,7 @@ public:
 	bool isValid(iPoint cell, j1Figure* figure, bool fill = true);
 
 private:
+	void CheckInputs();
 	void RegisterButtonData(pugi::xml_node&, SDL_Rect* button);
 	void ChangeScene(scene_type scene);
 	int UpdateScoreboard();
@@ -82,8 +83,6 @@ public:
 	scene_type scene;
 	SDL_Texture* texture_bricks;
 	p2List<SDL_Rect*> piece_colors;
-	Text* scoreTxt;
-	int score = 0;
 	Text* difficultyTxt;
 	int difficulty = 1;
 
@@ -114,6 +113,13 @@ private:
 	bool check = false;
 	p2SString image_string;
 	int dif_prov[3][3] = { {60,90,100},{ 40,80,100},{30,70,100} };
+
+	//Score
+	Text* scoreTxt;
+	int score = 0;
+	int scoreGain = 10;
+	bool randomScore;
+	int maxPoints, minPoints;
 };
 
 #endif // __j1SCENE_H__
