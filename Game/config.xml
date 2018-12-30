@@ -21,7 +21,7 @@
   </window>
   
   <audio volume="100">
-    <music volume="80">
+    <music volume="0">
       <folder>audio/music/</folder>
       <mainMenu>focus_music.ogg</mainMenu>
       <maps>
@@ -80,6 +80,7 @@
       <webpage x="927" y="183" w="123" h="123" />
       <restart x="965" y="761" w="114" h="114" />
       <sound x1="965" y1="315" w1="116" h1="116" x2="965" y2="434" w2="116" h2="116" x3="965" y3="315" w3="116" h3="116" />
+      <version x1="840" y1="600" w1="116" h1="116" x2="840" y2="600" w2="116" h2="116" x3="956" y3="600" w3="116" h3="116" />
       <title x="422" y="540" w="389" h="120" />
     </ui>
     <pieces file="textures/pieces.png">

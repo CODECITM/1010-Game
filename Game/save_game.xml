@@ -4,34 +4,31 @@
 	<window />
 	<textures />
 	<audio volume="100">
-		<music volume="80" />
+		<music volume="0" />
 		<sfx volume="100" />
 	</audio>
 	<fonts />
-	<gui />
 	<data>
-		<total_played_time>8.0010004</total_played_time>
-		<total_number_of_clicks>7</total_number_of_clicks>
+		<total_played_time>2.00</total_played_time>
+		<total_number_of_clicks>1</total_number_of_clicks>
 		<first_step>
 			<clicks_to_find_play_button>0</clicks_to_find_play_button>
-			<time_to_find_play_button>0.782999992</time_to_find_play_button>
+			<time_to_find_play_button>1.54</time_to_find_play_button>
 		</first_step>
-		<second_step>
-			<average_time_to_place>0.522400022</average_time_to_place>
-			<average_time_to_return>0.31400001</average_time_to_return>
-			<average_time_to_score>7.67700005</average_time_to_score>
-			<total_actions>12</total_actions>
-			<total_scoring>1</total_scoring>
-			<total_picked_blocks>6</total_picked_blocks>
-			<total_returned_blocks>1</total_returned_blocks>
-			<total_placed_blocks>5</total_placed_blocks>
-		</second_step>
-		<score_tracking average_times_between_scores="7.67700005">
-			<score_1 time_to_score="7.67700005">
-				<time_to_place placed="5">0.522400022</time_to_place>
-				<time_to_return returned="1">0.31400001</time_to_return>
-			</score_1>
-		</score_tracking>
+		<GAME_0>
+			<game_time>2.00</game_time>
+			<second_step>
+				<average_time_to_place>0.00</average_time_to_place>
+				<average_time_to_return>0.00</average_time_to_return>
+				<average_time_to_score>0.00</average_time_to_score>
+				<total_actions>0</total_actions>
+				<total_scoring>0</total_scoring>
+				<total_picked_blocks>0</total_picked_blocks>
+				<total_returned_blocks>0</total_returned_blocks>
+				<total_placed_blocks>0</total_placed_blocks>
+			</second_step>
+			<score_tracking average_times_between_scores="0.00" />
+		</GAME_0>
 	</data>
 	<scenes />
 	<fade />

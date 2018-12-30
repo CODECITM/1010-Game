@@ -24,7 +24,14 @@ j1Scene::j1Scene() : j1Module()
 
 	button = new SDL_Rect[4];
 	sound = new SDL_Rect[3];
+	version = new SDL_Rect[3];
 	
+	for (int i = 0; i < 10; i++) {
+		for (int j = 0; j < 10; j++) {
+			grid.cells[i][j] = nullptr;
+		}
+	}
+
 	srand(time(NULL));
 }
 
@@ -43,13 +50,9 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	
 	randomScore = config.child("score").attribute("random").as_bool(false);
 
-	if (randomScore) {
-		maxPoints = config.child("score").attribute("max").as_int(10);
-		minPoints = config.child("score").attribute("min").as_int(0);
-	}
-	else {
-		scoreGain = config.child("score").attribute("points").as_int(10);
-	}
+	maxPoints = config.child("score").attribute("max").as_int(10);
+	minPoints = config.child("score").attribute("min").as_int(0);
+	scoreGain = config.child("score").attribute("points").as_int(10);
 
 	//UI Data Awake
 	pugi::xml_node item = config.child("ui").child("title");
@@ -85,6 +88,11 @@ bool j1Scene::Awake(pugi::xml_node& config)
 	sound[0] = { item.attribute("x1").as_int(), item.attribute("y1").as_int(), item.attribute("w1").as_int(), item.attribute("h1").as_int() };
 	sound[1] = { item.attribute("x2").as_int(), item.attribute("y2").as_int(), item.attribute("w2").as_int(), item.attribute("h2").as_int() };
 	sound[2] = { item.attribute("x3").as_int(), item.attribute("y3").as_int(), item.attribute("w3").as_int(), item.attribute("h3").as_int() };
+
+	item = config.child("ui").child("version");
+	version[0] = { item.attribute("x1").as_int(), item.attribute("y1").as_int(), item.attribute("w1").as_int(), item.attribute("h1").as_int() };
+	version[1] = { item.attribute("x2").as_int(), item.attribute("y2").as_int(), item.attribute("w2").as_int(), item.attribute("h2").as_int() };
+	version[2] = { item.attribute("x3").as_int(), item.attribute("y3").as_int(), item.attribute("w3").as_int(), item.attribute("h3").as_int() };
 
 	item = config.child("ui").child("restart");
 	restart = { item.attribute("x").as_int(), item.attribute("y").as_int(), item.attribute("w").as_int(), item.attribute("h").as_int() };
@@ -143,6 +151,7 @@ bool j1Scene::Start()
 		parent = App->gui->CreateActionBox(&GoToCredits, { 576 / 2, 650 }, button, NULL, false);
 		App->gui->CreateText(DEFAULT_POINT, "Credits", WHITE_FONT, textFont, false, parent);
 
+		App->gui->CreateCheckBox(&ChangeVersion, &versionA, { 115 / 2 + 30, 900 - 115 / 2 - 30 }, version, NULL, false);
 		App->gui->CreateCheckBox(&Mute, &App->audio->muted, { 576 - 115 / 2 - 30, 900 - 115 / 2 - 30 }, sound, NULL, false);
 		break;
 	case scene_type::CREDITS:
@@ -219,7 +228,6 @@ bool j1Scene::PreUpdate()
 
 void j1Scene::CheckInputs()
 {
-	//Debug Inputs
 }
 
 // Called each loop iteration
@@ -351,6 +359,7 @@ bool j1Scene::CleanUp()
 
 		RELEASE_ARRAY(button);
 		RELEASE_ARRAY(sound);
+		RELEASE_ARRAY(version);
 	}
 
 	return true;

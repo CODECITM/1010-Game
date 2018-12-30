@@ -77,6 +77,8 @@ public:	// @Carles
 	ushort sfxVolume;
 
 	bool muted = false;
+	bool muteMusic = true;
+	bool muteSfx = false;
 
 private:
 

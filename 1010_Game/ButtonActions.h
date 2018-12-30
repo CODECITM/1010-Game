@@ -41,6 +41,34 @@ void Mute()
 	}
 }
 
+void MuteMusic()
+{
+	if (App->audio->muteMusic) {
+		App->audio->SetMusicVolume(100);
+	}
+	else {
+		App->audio->SetMusicVolume(0);
+	}
+}
+
+void MuteSfx()
+{
+	if (App->audio->muteSfx) {
+		App->audio->SetSfxVolume(100);
+	}
+	else {
+		App->audio->SetSfxVolume(0);
+	}
+}
+
+void ChangeVersion()
+{
+	MuteMusic();
+	App->audio->muteMusic = !(App->audio->muteMusic);
+
+	App->scene->randomScore = !(App->scene->randomScore);
+}
+
 void OpenWebpage()
 {
 	ShellExecuteA(NULL, "open", "https://github.com/CODECITM/1010_Game", NULL, NULL, SW_SHOWNORMAL);

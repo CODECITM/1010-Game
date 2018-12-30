@@ -85,6 +85,8 @@ public:
 	p2List<SDL_Rect*> piece_colors;
 	Text* difficultyTxt;
 	int difficulty = 1;
+	bool randomScore;
+	bool versionA = true;
 
 private:
 	//Default UI data list
@@ -102,6 +104,7 @@ private:
 	SDL_Rect webpage;
 	SDL_Rect restart;
 	SDL_Rect* sound;
+	SDL_Rect* version;
 
 	//Game
 	Grid grid;
@@ -119,7 +122,6 @@ private:
 	Text* scoreTxt;
 	int score = 0;
 	int scoreGain = 10;
-	bool randomScore;
 	int maxPoints, minPoints;
 };
 
