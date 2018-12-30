@@ -277,9 +277,11 @@ bool j1Scene::PostUpdate()
 			ChangeScene(scene_type::CREDITS);
 			break;
 		case fade_type::START_GAME:
-			if (scene == scene_type::GAME)
+			if (scene == scene_type::GAME) {
 				CleanUp();
-
+				App->data->Restart();
+			}
+			// Inicialitzar timer of each game 
 			ChangeScene(scene_type::GAME);
 			break;
 		case fade_type::RESTART:
