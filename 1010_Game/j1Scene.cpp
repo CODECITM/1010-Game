@@ -124,6 +124,7 @@ void j1Scene::RegisterButtonData(pugi::xml_node& node, SDL_Rect* button)
 bool j1Scene::Start()
 {
 	bool ret = true;
+	del_time.Start();
 
 	UIElement* parent;
 	_TTF_Font* titleFont = App->font->titleFont;
@@ -354,8 +355,7 @@ bool j1Scene::CleanUp()
 }
 
 bool j1Scene::deleteLines() {
-	bool ret = true;
-	if (del_time.ReadMs() > 30) {
+	if (del_time.ReadMs() > 30 && deleting) {
 		del_time.Start();
 		for (p2List_item<Line>* item = lines.start; item != nullptr; item = item->next) {
 			int index = item->data.index;
@@ -371,16 +371,17 @@ bool j1Scene::deleteLines() {
 					grid.cells[row][index]->color = Color::GREY;
 				}
 				item->data.index += 1;
-				ret = false;
+				deleting = true;
 				App->audio->PlayFx(SFX_BRICK_DESTROYED);
 			}
 			else {
 				check = true;
+				deleting = false;
 				lines.del(item);
 			}
 		}
 	}
-	return ret;
+	return !deleting;
 }
 
 bool j1Scene::checkPosibilities() {
@@ -407,7 +408,6 @@ bool j1Scene::checkPosibilities() {
 bool j1Scene::detectLines() {
 	bool ret = false;
 	Line line;
-	del_time.Start();
 	for (int row = 0; row < 10; row++) {
 		bool del = true;
 		for (int col = 0; col < 10; col++) {
@@ -418,6 +418,7 @@ bool j1Scene::detectLines() {
 			line.col = -1;
 			line.row = row;
 			lines.add(line);
+			deleting = true;
 			ret = true;
 			if (randomScore)
 				score += rand() % (maxPoints - minPoints + 1) + minPoints;
@@ -437,6 +438,7 @@ bool j1Scene::detectLines() {
 			line.row = -1;
 			line.col = col;
 			lines.add(line);
+			deleting = true;
 			ret = true;
 			if (randomScore)
 				score += rand() % (maxPoints - minPoints + 1) + minPoints;
