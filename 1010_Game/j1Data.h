@@ -5,7 +5,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 
-#define AUTOSAVETIME 1.0f
+#define AUTOSAVETIME 5.0f
 
 struct GameData {
 

@@ -49,7 +49,7 @@ bool j1Data::Start()
 bool j1Data::Update(float dt)
 {
 	b_returned = false;
-	one_minute = total_played_time.ReadSec() >= 1.0f;
+	one_minute = total_played_time.ReadSec() >= 60.0f;
 
 	if (one_minute && !initialized)
 	{
@@ -223,7 +223,6 @@ void j1Data::StartGame()
 	}
 	else {
 		if (!one_minute) return;
-		//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 	}
 }
 
@@ -234,23 +233,14 @@ void j1Data::Restart()
 
 	current_game[current_type]++;
 	game_type[current_type]->add(new GameData());
-
-	//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 }
 
 
 void j1Data::ChangeGameType() 
 {
 	if (!one_minute) return;
-	//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
 	current_type = (current_type == 0) ? 1 : 0;
-	/*if (current_game[current_type] > 0) {
-		current_game[current_type]++;
-		game_type[current_type]->add(new GameData());
-	}*/
-	//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 
-	//game_type[current_type]->add(new GameData());
 }
 
 void j1Data::GoToMenu() {
@@ -261,8 +251,6 @@ void j1Data::GoToMenu() {
 	current_game[current_type]++;
 	game_type[current_type]->add(new GameData());
 	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
-
-
 }
 
 void j1Data::StartTimer()
