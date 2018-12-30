@@ -5,7 +5,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 
-#define AUTOSAVETIME 2.0f
+#define AUTOSAVETIME 1.0f
 
 struct GameData {
 
@@ -64,24 +64,38 @@ public:
 
 	void Restart();
 
+	void ChangeGameType();
+
+	void GoToMenu();
+
 
 public:
 
 private:
 
-	p2List<GameData*> games;
+
+	p2List<GameData*> gamesA;
+	p2List<GameData*> gamesB;
+	p2List<GameData*>* game_type[2];
+	int current_game[2] = { 0, 0};
+	//p2List_item<GameData*>* current_game;
+
 
 	j1Timer autosave;
 	int total_number_clicks;
 
 	j1Timer total_played_time;
 
-	int current_game;
+	int current_type;
 
 	// 1st Step
 	int clicks_to_play_button_save;
 	float time_find_play_button_save;
 
+	bool one_minute;
+	bool initialized;
+
+	bool first_entering;
 	bool b_returned;
 };
 

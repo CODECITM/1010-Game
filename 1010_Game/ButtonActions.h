@@ -19,6 +19,7 @@ void GoToSettings()
 void GoToMenu()
 {
 	App->fade->FadeToBlack(App->fade->GetDelay(), fade_type::MAIN_MENU);
+	App->data->GoToMenu();
 }
 
 void GoToCredits()
@@ -67,6 +68,7 @@ void ChangeVersion()
 	App->audio->muteMusic = !(App->audio->muteMusic);
 
 	App->scene->randomScore = !(App->scene->randomScore);
+	App->data->ChangeGameType();
 }
 
 void OpenWebpage()
