@@ -71,28 +71,37 @@ bool j1Data::Update(float dt)
 
 bool j1Data::CleanUp()
 {
+	average_list_place.clear();
+	average_list_return.clear();
+	average_list_score.clear();
 	return true;
 }
 
 
 bool j1Data::Save(pugi::xml_node & node) const
 {
+	char c[32];
 
-	node.append_child("total_played_time").text().set(total_played_time.ReadSec());
+	sprintf_s(c, sizeof(c),"%.2f" ,total_played_time.ReadSec());
+	node.append_child("total_played_time").text().set(c);
 	node.append_child("total_number_of_clicks").text().set(total_number_clicks);
 	
 	//1st Step
 	pugi::xml_node first_step = node.append_child("first_step");
 
 	first_step.append_child("clicks_to_find_play_button").text().set(clicks_to_play_button_save);
-	first_step.append_child("time_to_find_play_button").text().set(time_find_play_button_save);
+	sprintf_s(c, sizeof(c), "%.2f", time_find_play_button_save);
+	first_step.append_child("time_to_find_play_button").text().set(c);
 
 	//2nd Step
 	pugi::xml_node second_step = node.append_child("second_step");
 
-	second_step.append_child("average_time_to_place").text().set(average_time_to_place_save);
-	second_step.append_child("average_time_to_return").text().set(average_time_to_return_save);
-	second_step.append_child("average_time_to_score").text().set(average_time_to_score_save);
+	sprintf_s(c, sizeof(c), "%.2f", average_time_to_place_save);
+	second_step.append_child("average_time_to_place").text().set(c);
+	sprintf_s(c, sizeof(c), "%.2f", average_time_to_return_save);
+	second_step.append_child("average_time_to_return").text().set(c);
+	sprintf_s(c, sizeof(c), "%.2f", average_time_to_score_save);
+	second_step.append_child("average_time_to_score").text().set(c);
 
 	second_step.append_child("total_actions").text().set(total_actions);
 	second_step.append_child("total_scoring").text().set(total_scoring);
@@ -102,28 +111,33 @@ bool j1Data::Save(pugi::xml_node & node) const
 
 	//Extra tracking
 	pugi::xml_node score_tracking = node.append_child("score_tracking");
-	score_tracking.append_attribute("average_times_between_scores").set_value(average_time_to_score_save);
+	sprintf_s(c, sizeof(c), "%.2f", average_time_to_score_save);
+	score_tracking.append_attribute("average_times_between_scores").set_value(c);
 
 	pugi::xml_node n;
 	pugi::xml_node a;
-	char c[32];
 
 	// can use same index, the three lists always Add at same point
 	for (int i = 0; i < average_list_place.count(); i++) 
 	{
 		sprintf_s(c,sizeof(c), "score_%d", int(average_list_score.At(i)->data.x));
 		n = score_tracking.append_child(c);
-		n.append_attribute("time_to_score").set_value(average_list_score.At(i)->data.y);
+		sprintf_s(c, sizeof(c), "%.2f", average_list_score.At(i)->data.y);
+		n.append_attribute("time_to_score").set_value(c);
 
 		// placing tracking
 		a = n.append_child("time_to_place");
-		a.append_attribute("placed").set_value(average_list_place.At(i)->data.x);
-		a.text().set(average_list_place.At(i)->data.y);
+		sprintf_s(c, sizeof(c), "%.2f", average_list_place.At(i)->data.x);
+		a.append_attribute("placed").set_value(c);
+		sprintf_s(c, sizeof(c), "%.2f", average_list_place.At(i)->data.y);
+		a.text().set(c);
 
 		// returning tracking
 		a = n.append_child("time_to_return");
-		a.append_attribute("returned").set_value(average_list_return.At(i)->data.x);
-		a.text().set(average_list_return.At(i)->data.y);
+		sprintf_s(c, sizeof(c), "%.2f", average_list_return.At(i)->data.x);
+		a.append_attribute("returned").set_value(c);
+		sprintf_s(c, sizeof(c), "%.2f", average_list_return.At(i)->data.y);
+		a.text().set(c);
 
 	}
 
@@ -141,6 +155,8 @@ void j1Data::Scored()
 	average_list_place.add(fPoint(placed_blocks,average_time_to_place_save));
 	average_list_return.add(fPoint(returned_blocks, average_time_to_return_save));
 	average_list_score.add(fPoint(total_scoring, stopped_at));
+
+	time_to_score.Start();
 }
 
 void j1Data::Picked()
@@ -149,7 +165,7 @@ void j1Data::Picked()
 	picked_blocks++;
 	time_picking_placing.Start();
 	time_picking_returning.Start();
-	if (!time_to_score.IsRunning()) time_to_score.Start();
+	
 }
 
 void j1Data::Returned()
@@ -176,4 +192,5 @@ void j1Data::StartGame()
 {
 	clicks_to_play_button_save = total_number_clicks;
 	time_find_play_button_save = total_played_time.ReadSec();
+	time_to_score.Start();
 }

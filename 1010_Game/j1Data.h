@@ -5,7 +5,6 @@
 #include "p2List.h"
 #include "p2Point.h"
 
-#define AVERAGE 5
 #define AUTOSAVETIME 2.0f
 
 class j1Data :	public j1Module

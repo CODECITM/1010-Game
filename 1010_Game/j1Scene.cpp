@@ -242,7 +242,7 @@ bool j1Scene::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		figures.add(new j1Figure({ 80,100 }, PURPLE));
+		figures.add(new j1Figure({ 80,100 }, GREEN));
 	}
 
 	return true;
@@ -425,6 +425,7 @@ bool j1Scene::detectLines() {
 			else
 				score += scoreGain;
 			UpdateScoreboard();
+			App->data->Scored();
 		}
 	}
 
@@ -445,6 +446,7 @@ bool j1Scene::detectLines() {
 			else
 				score += scoreGain;
 			UpdateScoreboard();
+			App->data->Scored();
 		}
 	}
 	return ret;
@@ -557,8 +559,7 @@ bool j1Scene::checkFigures() {
 				item->data->moveCells(movement);
 				if (isValid(cell, item->data)) {
 					App->data->Placed();
-					if (detectLines()) //Check if Game Stops unespectedly
-						App->data->Scored(); 
+					detectLines(); //Check if Game Stops unespectedly 
 					figures.del(item);
 					check = true;
 				}
