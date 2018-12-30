@@ -68,6 +68,8 @@ public:
 
 	void GoToMenu();
 
+	void StartTimer();
+
 
 public:
 

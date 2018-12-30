@@ -289,6 +289,7 @@ bool j1Scene::PostUpdate()
 				CleanUp();
 				App->data->Restart();
 			}
+			App->data->StartTimer();
 			// Inicialitzar timer of each game 
 			ChangeScene(scene_type::GAME);
 			break;

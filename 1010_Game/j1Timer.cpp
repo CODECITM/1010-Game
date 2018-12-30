@@ -27,8 +27,8 @@ void j1Timer::Start()
 
 float j1Timer::Stop()
 {
-	stopped_at = SDL_GetTicks();
 	running = false;
+	stopped_at = SDL_GetTicks();
 	return ReadSec();
 }
 

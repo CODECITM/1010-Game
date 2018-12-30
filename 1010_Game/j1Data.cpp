@@ -29,7 +29,7 @@ j1Data::j1Data()
 	b_returned = false;
 	one_minute = false;
 	initialized = false;
-	first_entering = false;
+	first_entering = true;
 }
 
 
@@ -71,15 +71,14 @@ bool j1Data::Update(float dt)
 		App->SaveGame();
 		autosave.Start();
 	}
-
 	return true;
 }
 
 bool j1Data::CleanUp()
 {
-	//average_list_place.clear();
-	//average_list_return.clear();
-	//average_list_score.clear();
+	gamesA.clear();
+	gamesB.clear();
+
 	return true;
 }
 
@@ -104,59 +103,59 @@ bool j1Data::Save(pugi::xml_node & node) const
 	{
 		sprintf_s(g, sizeof(g), "GAME_%c", (i==0)?'A':'B');
 		pugi::xml_node gameType = node.append_child(g);
-	
-		for (int current_game = 0; current_game < game_type[i]->count(); current_game++) {
 
-			sprintf_s(c, sizeof(c), "%s%d",g, current_game);
+		for (int k = 0; k < game_type[i]->count(); k++) {
+
+			sprintf_s(c, sizeof(c), "%s%d",g, k);
 			pugi::xml_node game = gameType.append_child(c);
 
-			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->current_game_time.ReadSec());
+			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->current_game_time.ReadSec());
 			game.append_child("game_time").text().set(c);
 
 			//2nd Step
 			pugi::xml_node second_step = game.append_child("second_step");
 
-			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_time_to_place_save);
+			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_time_to_place_save);
 			second_step.append_child("average_time_to_place").text().set(c);
-			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_time_to_return_save);
+			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_time_to_return_save);
 			second_step.append_child("average_time_to_return").text().set(c);
-			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_time_to_score_save);
+			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_time_to_score_save);
 			second_step.append_child("average_time_to_score").text().set(c);
 
-			second_step.append_child("total_actions").text().set(game_type[i]->At(current_game)->data->total_actions);
-			second_step.append_child("total_scoring").text().set(game_type[i]->At(current_game)->data->total_scoring);
-			second_step.append_child("total_picked_blocks").text().set(game_type[i]->At(current_game)->data->picked_blocks);
-			second_step.append_child("total_returned_blocks").text().set(game_type[i]->At(current_game)->data->returned_blocks);
-			second_step.append_child("total_placed_blocks").text().set(game_type[i]->At(current_game)->data->placed_blocks);
+			second_step.append_child("total_actions").text().set(game_type[i]->At(k)->data->total_actions);
+			second_step.append_child("total_scoring").text().set(game_type[i]->At(k)->data->total_scoring);
+			second_step.append_child("total_picked_blocks").text().set(game_type[i]->At(k)->data->picked_blocks);
+			second_step.append_child("total_returned_blocks").text().set(game_type[i]->At(k)->data->returned_blocks);
+			second_step.append_child("total_placed_blocks").text().set(game_type[i]->At(k)->data->placed_blocks);
 
 			//Extra tracking
 			pugi::xml_node score_tracking = game.append_child("score_tracking");
-			//sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_time_to_score_save);
+			//sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_time_to_score_save);
 			score_tracking.append_attribute("average_times");// .set_value(c);
 
 			pugi::xml_node n;
 			pugi::xml_node a;
 
 			// can use same index, the three lists always Add at same point
-			for (int j = 0; j < game_type[i]->At(current_game)->data->average_list_place.count(); j++)
+			for (int j = 0; j < game_type[i]->At(k)->data->average_list_place.count(); j++)
 			{
-				sprintf_s(c, sizeof(c), "score_%d", int(game_type[i]->At(current_game)->data->average_list_score.At(j)->data.x));
+				sprintf_s(c, sizeof(c), "score_%d", int(game_type[i]->At(k)->data->average_list_score.At(j)->data.x));
 				n = score_tracking.append_child(c);
-				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_list_score.At(j)->data.y);
+				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_list_score.At(j)->data.y);
 				n.append_attribute("time_to_score").set_value(c);
 
 				// placing tracking
 				a = n.append_child("time_to_place");
-				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_list_place.At(j)->data.x);
+				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_list_place.At(j)->data.x);
 				a.append_attribute("placed").set_value(c);
-				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_list_place.At(j)->data.y);
+				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_list_place.At(j)->data.y);
 				a.text().set(c);
 
 				// returning tracking
 				a = n.append_child("time_to_return");
-				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_list_return.At(j)->data.x);
+				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_list_return.At(j)->data.x);
 				a.append_attribute("returned").set_value(c);
-				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(current_game)->data->average_list_return.At(j)->data.y);
+				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_list_return.At(j)->data.y);
 				a.text().set(c);
 
 			}
@@ -218,40 +217,55 @@ void j1Data::StartGame()
 	if (first_entering) {
 		clicks_to_play_button_save = total_number_clicks;
 		time_find_play_button_save = total_played_time.ReadSec();
+		game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
+
 		first_entering = false;
 	}
 	else {
-		if (current_game[current_type] > 0) {
-			current_game[current_type]++;
-			game_type[current_type]->add(new GameData());
-		}
+		if (!one_minute) return;
+		//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 	}
-	//game_type[current_type]->At(current_game[current_type])->data->time_to_score.Start();
 }
 
 void j1Data::Restart() 
 {
 	if (!one_minute) return;
 	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
+
 	current_game[current_type]++;
 	game_type[current_type]->add(new GameData());
-	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
+
+	//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 }
 
 
 void j1Data::ChangeGameType() 
 {
-	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
+	if (!one_minute) return;
+	//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
 	current_type = (current_type == 0) ? 1 : 0;
-	if (current_game[current_type] > 0) {
+	/*if (current_game[current_type] > 0) {
 		current_game[current_type]++;
 		game_type[current_type]->add(new GameData());
-	}
-	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
+	}*/
+	//game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 
 	//game_type[current_type]->add(new GameData());
 }
 
 void j1Data::GoToMenu() {
+
+	if (!one_minute) return;
 	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
+
+	current_game[current_type]++;
+	game_type[current_type]->add(new GameData());
+	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Stop();
+
+
+}
+
+void j1Data::StartTimer()
+{
+	game_type[current_type]->At(current_game[current_type])->data->current_game_time.Start();
 }
