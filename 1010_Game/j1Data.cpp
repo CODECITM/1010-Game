@@ -102,12 +102,12 @@ bool j1Data::Save(pugi::xml_node & node) const
 	for (int i = 0; i < 2; i++) 
 	{
 		sprintf_s(g, sizeof(g), "GAME_%c", (i==0)?'A':'B');
-		pugi::xml_node gameType = node.append_child(g);
+		//pugi::xml_node gameType = node.append_child(g);
 
 		for (int k = 0; k < game_type[i]->count(); k++) {
 
-			sprintf_s(c, sizeof(c), "%s%d",g, k);
-			pugi::xml_node game = gameType.append_child(c);
+			//sprintf_s(c, sizeof(c), "%s%d",g, k);
+			pugi::xml_node game = node.append_child(g);
 
 			sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->current_game_time.ReadSec());
 			game.append_child("game_time").text().set(c);
@@ -129,9 +129,9 @@ bool j1Data::Save(pugi::xml_node & node) const
 			second_step.append_child("total_placed_blocks").text().set(game_type[i]->At(k)->data->placed_blocks);
 
 			//Extra tracking
-			pugi::xml_node score_tracking = game.append_child("score_tracking");
+			//pugi::xml_node score_tracking = game.append_child("score_tracking");
 			//sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_time_to_score_save);
-			score_tracking.append_attribute("average_times");// .set_value(c);
+			//score_tracking.append_attribute("average_times");// .set_value(c);
 
 			pugi::xml_node n;
 			pugi::xml_node a;
@@ -139,8 +139,8 @@ bool j1Data::Save(pugi::xml_node & node) const
 			// can use same index, the three lists always Add at same point
 			for (int j = 0; j < game_type[i]->At(k)->data->average_list_place.count(); j++)
 			{
-				sprintf_s(c, sizeof(c), "score_%d", int(game_type[i]->At(k)->data->average_list_score.At(j)->data.x));
-				n = score_tracking.append_child(c);
+				//sprintf_s(c, sizeof(c), "score_%d", int(game_type[i]->At(k)->data->average_list_score.At(j)->data.x));
+				n = game.append_child("score");
 				sprintf_s(c, sizeof(c), "%.2f", game_type[i]->At(k)->data->average_list_score.At(j)->data.y);
 				n.append_attribute("time_to_score").set_value(c);
 

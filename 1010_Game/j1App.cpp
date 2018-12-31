@@ -431,29 +431,30 @@ bool j1App::SavegameNow() const
 	LOG("Saving Game State to %s...", save_game.GetString());
 
 	// xml object were we will store all data
-	pugi::xml_document data;
+	pugi::xml_document datadoc;
 	pugi::xml_node root;
 	
-	root = data.append_child("game_state");
+	root = datadoc.append_child("game_state");
 
 	p2List_item<j1Module*>* item = modules.start;
 
-	while(item != NULL && ret == true)
+	data->Save(root.append_child("data"));
+	/*while(item != NULL && ret == true)
 	{
 		if(item->data->IsEnabled())
 			ret = item->data->Save(root.append_child(item->data->name.GetString()));
 		item = item->next;
-	}
+	}*/
 
 	if(ret == true)
 	{
-		data.save_file(save_game.GetString());
+		datadoc.save_file(save_game.GetString());
 		LOG("... finished saving", );
 	}
 	else
 		LOG("Save process halted from an error in module %s", (item != NULL) ? item->data->name.GetString() : "unknown");
 
-	data.reset();
+	datadoc.reset();
 	want_to_save = false;
 	return ret;
 }
