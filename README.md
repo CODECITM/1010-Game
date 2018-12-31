@@ -1,5 +1,5 @@
 # 1010! Tribute by CODECITM
-This is a university project made by [CITM](https://www.citm.upc.edu/ing/) Centre de la Imatge i la Tecnologia Multimedia students of the TTC (Talent Tech Center) in Barcelona, in which we make 1010! playtesting-ready tribute in C & C++. We primarly used the [PugiXML](https://pugixml.org/) and [SDL](https://www.libsdl.org/) libraries.
+This is a university project made by [CITM](https://www.citm.upc.edu/ing/) (Centre de la Imatge i la Tecnologia Multimedia) students of the TTC (Talent Tech Center) in Barcelona, in which we make 1010! playtesting-ready tribute in C & C++. We primarly used the [PugiXML](https://pugixml.org/) and [SDL](https://www.libsdl.org/) libraries.
 
 Make rows and columns in the grid with the given pieces to gain score!
 
